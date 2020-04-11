@@ -18,8 +18,13 @@ spring:
     testOnReturn: false
     poolPreparedStatements: true
     maxOpenPreparedStatements: 20
+  mvc:
+    view:
+      prefix: /WEB-INF/jsp/
+      suffix: .jsp
 server:
-  port: 8081
+  port: 8080
+  address: 0.0.0.0
 
 mybatis-plus:
   config-location:
