@@ -8,10 +8,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>hello</title>
+    <title>Formatter</title>
 </head>
 <body>
-
+    <h3> Excel 清除空格与换行 </h3>
+    <br>
     <form action="/generator/sysUser/uploadExcel" enctype="multipart/form-data" method="post">
         <input type="file" name="fileName"><br><br>
         <input type="submit" value="上传">

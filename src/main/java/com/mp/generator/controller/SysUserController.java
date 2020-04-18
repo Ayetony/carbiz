@@ -64,7 +64,8 @@ public class SysUserController {
         file.transferTo(dest);
         String absolutePath = dest.getAbsolutePath();
         //清洗excel
-        ExcelProcess.clean(absolutePath);
+//        ExcelProcess.clean(absolutePath);
+        ExcelProcess.format(absolutePath);
         //乱码问题
         response.setContentType("multipart/form-data;charset=UTF-8");
         File downloadFile = new File(absolutePath);
