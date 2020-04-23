@@ -43,7 +43,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-tomcat</artifactId>
-            <scope>provided</scope>
+            <version>2.0.8.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>org.apache.tomcat.embed</groupId>

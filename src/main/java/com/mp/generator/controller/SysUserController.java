@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.mp.generator.entity.SysUser;
 import com.mp.generator.service.ISysUserService;
 import com.mp.utils.ExcelProcess;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpHeaders;
@@ -33,6 +35,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/generator/sysUser")
 public class SysUserController {
+
+    Logger logger = LoggerFactory.getLogger(ExcelProcess.class);
 
     @RequestMapping("/mp")
     public String map(){
@@ -66,6 +70,7 @@ public class SysUserController {
         //清洗excel
 //        ExcelProcess.clean(absolutePath);
         ExcelProcess.format(absolutePath);
+        logger.info("Format the excel : " + fileName + ">>Time:"+ LocalDateTime.now());
         //乱码问题
         response.setContentType("multipart/form-data;charset=UTF-8");
         File downloadFile = new File(absolutePath);

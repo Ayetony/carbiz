@@ -19,17 +19,16 @@ public class MPGenerator {
 
     public static void main(String[] args) {
         //以下列举了几个重要的定制化配置，如果不需要使用，则需将参数引用的地方注释
-
         //数据库配置
-        String dataBaseUrl = "jdbc:mysql://localhost:3306/mybatis?useUnicode=true&useSSL=false&characterEncoding=utf8&serverTimezone=UTC";
+        String dataBaseUrl = "jdbc:mysql://rm-2zez6a4q4b1srt5m1ro.mysql.rds.aliyuncs.com:3306/vela_test?useUnicode=true&useSSL=false&characterEncoding=utf8&serverTimezone=UTC";
         String DataBaseDriver = "com.mysql.cj.jdbc.Driver";
-        String userName = "root";
-        String password = "root";
+        String userName = "hkttty0001";
+        String password = "Naya00001";
         //作者名，用于生成文件注解时使用。
         String author = "ayetony";
 
         //表名,多表使用逗号分开
-        final String tableName = "sys_user";
+        final String tableName = "product_info";
         //controller的url请求是否使用 "-" 形式如: true :/case-info false:/caseInfo
         boolean controllerMappingHyphenStyle = false;
         // 是否使用lombok
