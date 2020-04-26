@@ -11,9 +11,9 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
@@ -31,8 +31,7 @@ import java.util.List;
  * @author ayetony
  * @since 2020-03-31
  */
-@RestController
-@RequestMapping("/generator/sysUser")
+@Controller
 public class SysUserController {
 
     Logger logger = LoggerFactory.getLogger(ExcelProcess.class);
@@ -40,6 +39,11 @@ public class SysUserController {
     @RequestMapping("/mp")
     public String map(){
         return "你好";
+    }
+
+    @RequestMapping("/")
+    public String index(){
+        return "index";
     }
 
     @Autowired

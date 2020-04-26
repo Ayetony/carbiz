@@ -23,7 +23,7 @@ spring:
       prefix: /WEB-INF/jsp/
       suffix: .jsp
 server:
-  port: 8080
+  port: 80
   address: 0.0.0.0
 
 mybatis-plus:

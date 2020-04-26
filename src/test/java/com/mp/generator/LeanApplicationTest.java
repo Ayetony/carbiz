@@ -1,5 +1,6 @@
 package com.mp.generator;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.mp.generator.entity.ProductInfo;
 import com.mp.generator.entity.ProductInfoSync;
 import com.mp.generator.mapper.ProductInfoMapper;
@@ -32,12 +33,15 @@ class LearnApplicationTest {
 
     @Test
     public void testSelect() {
+        //删除 product_info dj 临时链接
+        int delDj = productInfoMapper.delete(new QueryWrapper<ProductInfo>().like("product_ref","dj"));
+        System.out.println("删除 product_info dj-link： " + delDj + "条");
         //同步表sync the table
-        System.out.println(" select all method test --------");
+        System.out.println(" base sync method test --------");
         List<ProductInfo> productInfos = productInfoMapper.selectList(null);
         AtomicInteger updateCount = new AtomicInteger();
+        AtomicInteger scanPosition = new AtomicInteger();
         AtomicInteger count = new AtomicInteger();
-        System.out.println(productInfos.size());
         Map<String, ProductInfo> hashMap = new HashMap<>();// 一个hash打天下
         productInfos.forEach(user -> {
             user.setProductId(UrlParse.productRefToId(user.getProductRef()));
@@ -46,6 +50,7 @@ class LearnApplicationTest {
         });
 //批量插入数据表
         hashMap.forEach((key, productInfo) -> {
+            System.out.println("Scan Db===>扫描数据行数:" + scanPosition.incrementAndGet());
             ProductInfoSync sync = new ProductInfoSync();
             sync.setCurrentPrice(productInfo.getCurrentPrice());
             sync.setCustomerRebuyRate(productInfo.getCustomerRebuyRate());
@@ -65,7 +70,7 @@ class LearnApplicationTest {
                 if(StringUtils.isNotBlank(message)) {
                     sync.setUpdateTimes(syncQuery.getUpdateTimes() + 1);
                     productInfoSyncMapper.updateById(sync);
-                    System.out.println("update 更新:" + message + " ;updateCount" + updateCount.getAndIncrement());
+                    System.out.println("update id=" + sync.getProductId() + ",更新:" + message + " ;updateCount" + updateCount.getAndIncrement());
                 }
             } else {
                 productInfoSyncMapper.insert(sync);
@@ -115,6 +120,12 @@ class LearnApplicationTest {
 
     }
 
+
+    @Test
+    public void testDj(){
+        int qty = productInfoMapper.delete(new QueryWrapper<ProductInfo>().like("product_ref","dj"));
+        System.out.println(qty);
+    }
 
 }
 

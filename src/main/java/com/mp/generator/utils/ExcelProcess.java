@@ -16,7 +16,7 @@ public class ExcelProcess {
 
     static Logger logger = LoggerFactory.getLogger(ExcelProcess.class);
 
-    public static void main(String[] args) throws IOException {
+    public static void mainDemo(String[] args) throws IOException {
         format("src/test_product.xlsx");
         return;
     }

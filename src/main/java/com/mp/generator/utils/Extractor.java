@@ -21,7 +21,7 @@ public class Extractor {
             }
     }
 
-    public static void main(String[] args) {
+    public static void mainDemo(String[] args) {
 
         System.out.println(extractNumber("4年"));
         System.out.println(StringUtils.equals("", ""));
