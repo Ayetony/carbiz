@@ -1,6 +1,5 @@
 package com.mp.generator.utils;
 
-import com.alibaba.druid.support.json.JSONUtils;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.gson.JsonElement;
@@ -18,9 +17,7 @@ import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class HttpClientPuller {
@@ -73,9 +70,7 @@ public class HttpClientPuller {
         Map<String,String> propListMap = mapJson(element,"props_list");
 
         Map<String,String> imgPropMap = new HashMap<>();
-        propImgMap.entrySet().forEach(e -> {
-            imgPropMap.put(propListMap.get(e.getKey()),e.getValue());
-        });
+        propImgMap.forEach((key, value) -> imgPropMap.put(propListMap.get(key), value));
 
         String packageWeight =  "packageWeight:" + element.getAsJsonObject().get("m_weight").getAsString();
         String unitWeight = "unitWeight:" + element.getAsJsonObject().get("j_weight").getAsString();
@@ -95,7 +90,7 @@ public class HttpClientPuller {
         String priceRange = element.getAsJsonObject().get("priceRange").toString();
         String min_num = element.getAsJsonObject().get("min_num").getAsString();
         String basic_price = element.getAsJsonObject().get("price").getAsString();
-        String currentPrice = "";
+        String currentPrice;
         if(StringUtils.isNotBlank(priceRange)){
             currentPrice = priceRange;
         }else{
@@ -130,9 +125,7 @@ public class HttpClientPuller {
                    skus.put(imgURL,size.replace("尺码","size") + ";"+ color.replace("颜色","color") + ";" + price + ";" + quantity);
         } );
 
-        skus.entries().forEach( entry -> {
-            System.out.println(entry.getKey() + " " + entry.getValue());
-        });
+        skus.entries().forEach(HttpClientPuller::accept);
 
 
 
@@ -150,9 +143,7 @@ public class HttpClientPuller {
     private static Map<String,String> mapJson(JsonElement element,String key){
         JsonElement keyElement = element.getAsJsonObject().get(key);
         Map<String,String> hashMap = new HashMap<>();
-        keyElement.getAsJsonObject().entrySet().forEach( e -> {
-            hashMap.put(e.getKey().replace("\"",""),e.getValue().toString().replace("\"",""));
-        });
+        keyElement.getAsJsonObject().entrySet().forEach( e -> hashMap.put(e.getKey().replace("\"",""),e.getValue().toString().replace("\"","")));
         return hashMap;
     }
 
@@ -614,4 +605,7 @@ public class HttpClientPuller {
             "\t\"relate_items\": []\n" +
             "}";
 
+    private static void accept(Map.Entry<String, String> entry) {
+        System.out.println(entry.getKey() + " " + entry.getValue());
+    }
 }
