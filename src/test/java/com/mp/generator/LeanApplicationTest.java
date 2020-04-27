@@ -141,7 +141,8 @@ class LearnApplicationTest {
     @Test
     public void testClassify(){
         List<ProductInfoSync> syncList = productInfoSyncMapper.
-                selectList(new QueryWrapper<ProductInfoSync>().lambda().like(ProductInfoSync::getKeyword,"浙江"));
+                selectList(new QueryWrapper<ProductInfoSync>().lambda().like(ProductInfoSync::getKeyword,"浙江")
+                .isNull(true,ProductInfoSync::getParent).or().eq(ProductInfoSync::getChild,""));;
         System.out.println(syncList.size());
 
         syncList.forEach( sync ->{
@@ -167,10 +168,16 @@ class LearnApplicationTest {
     @Test
     public void AliProductProduce(){
         AtomicInteger count = new AtomicInteger();
-        List<ProductInfoSync> productInfoSyncList = productInfoSyncMapper.selectList(new QueryWrapper<ProductInfoSync>().isNotNull(true,"parent").isNotNull(true,"child"));
+        List<ProductInfoSync> productInfoSyncList = productInfoSyncMapper.selectList(new QueryWrapper<ProductInfoSync>()
+                .isNotNull(true,"parent").isNotNull(true,"child").or()
+                .ne(true,"child","").ne(true,"parent",""));
         productInfoSyncList.forEach(sync ->{
             AlibabaProductInfoPo alibabaProductInfoPo = new AlibabaProductInfoPo();
-            testNormalBaseImport(sync);
+            try{
+                testNormalBaseImport(sync);
+            }catch (IllegalStateException e){
+                throw new RuntimeException("Not a Json object 异常 id:" + sync.getProductId());
+            }
             count.incrementAndGet();
             if(count.intValue() > 100){
                 System.exit(1);
@@ -195,6 +202,7 @@ class LearnApplicationTest {
             productInfoPo.setSourceSite("1688.com");
             productInfoPo.setParentCatalog(sync.getParent());
             productInfoPo.setChildCatalog(sync.getChild());
+            productInfoPo.setKeyword(sync.getKeyword());
             alibabaProductInfoPoMapper.insert(productInfoPo);
             count.incrementAndGet();
             System.out.println("正式入库：count" + count);
@@ -202,7 +210,11 @@ class LearnApplicationTest {
     }
 
 
-
+   @Test
+    public void testSplit(){
+        String test = "颜色:粉底白点";
+       System.out.println(test.split(";")[0]);
+   }
 
 
 }

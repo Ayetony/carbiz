@@ -78,7 +78,7 @@ public class ProductSyncTableTask {
         System.out.println("入库成功：" + count);
     }
 
-    @Scheduled(cron = "0 0 12 22 * * ?")
+    @Scheduled(cron = "0 0 7,12,22 * * ?")
     private void classifyTask(){
           classifyZJprovince();
     }
@@ -116,7 +116,7 @@ public class ProductSyncTableTask {
         List<ProductInfoSync> syncList = productInfoSyncMapper.
                 selectList(new QueryWrapper<ProductInfoSync>()
                         .lambda().like(ProductInfoSync::getKeyword,"浙江")
-                        .isNotNull(true,ProductInfoSync::getParent).isNotNull(true,ProductInfoSync::getChild));
+                        .isNull(true,ProductInfoSync::getChild));
         System.out.println(syncList.size());
 
         syncList.forEach( sync ->{

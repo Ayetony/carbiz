@@ -135,7 +135,10 @@ public class HttpClientPuller {
                 String name = e.getAsJsonObject().get("properties_name").getAsString();
                 String[] sku = name.split(";");
                 String color = StringUtils.substring(sku[0],sku[0].lastIndexOf("颜色:"));
-                String size = sku[1];
+                String size = "" ;
+                if(sku.length>1) {
+                    size = sku[1];
+                }
                 String imgURL = imgPropMap.get(color);
                 String price = "price:" + e.getAsJsonObject().get("price").getAsString();
                 String quantity = "quantity:" + e.getAsJsonObject().get("quantity").getAsString();
