@@ -1,47 +1,35 @@
-package com.mp.generator;
+package com.mp.generator.tasks;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.google.common.collect.Multimap;
-import com.mp.generator.entity.AlibabaProductInfoPo;
 import com.mp.generator.entity.ProductInfo;
 import com.mp.generator.entity.ProductInfoSync;
-import com.mp.generator.mapper.AlibabaProductInfoPoMapper;
 import com.mp.generator.mapper.ProductInfoMapper;
 import com.mp.generator.mapper.ProductInfoSyncMapper;
 import com.mp.generator.utils.Extractor;
-import com.mp.generator.utils.HttpClientPuller;
 import com.mp.generator.utils.UrlParse;
 import org.apache.commons.lang.StringUtils;
-import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-@SpringBootTest
-@RunWith(SpringRunner.class)
-class LearnApplicationTest {
-
+@Configuration
+@EnableScheduling
+public class ProductSyncTableTask {
 
     @Autowired
-    private ProductInfoMapper productInfoMapper;
+    ProductInfoMapper productInfoMapper;
 
     @Autowired
     ProductInfoSyncMapper productInfoSyncMapper;
 
-    @Autowired
-    AlibabaProductInfoPoMapper alibabaProductInfoPoMapper;
-
-
-
-    @Test
-    public void testSelect() {
+    @Scheduled(fixedRate = 1000*60*60*3)
+    private void syncOcptusProductInfoTask(){
         //删除 product_info dj 临时链接
         int delDj = productInfoMapper.delete(new QueryWrapper<ProductInfo>().like("product_ref","dj"));
         System.out.println("删除 product_info dj-link： " + delDj + "条");
@@ -88,20 +76,20 @@ class LearnApplicationTest {
             }
         });
         System.out.println("入库成功：" + count);
-
     }
 
-    @Test
-    public void testId(){
-        ProductInfoSync sync = productInfoSyncMapper.selectById("44307401770");
-        System.out.println(sync.getProductName());
+    @Scheduled(fixedRate = 1000*60*60*7)
+    private void classifyTask(){
+          classifyZJprovince();
     }
+
+
 
     public static String diff(ProductInfoSync old, ProductInfoSync sync){
 
         String message = "";
         if(!StringUtils.equals(old.getProductName(),sync.getProductName())){
-           message += "Old-ProductName:" + old.getProductName() + "; New-ProductName:" + sync.getProductName();
+            message += "Old-ProductName:" + old.getProductName() + "; New-ProductName:" + sync.getProductName();
         }
 
         if(!StringUtils.equals(old.getShopName(),sync.getShopName())){
@@ -121,46 +109,10 @@ class LearnApplicationTest {
         }
 
         return message;
-
-
     }
 
 
-    @Test
-    public void testDj(){
-        int qty = productInfoMapper.delete(new QueryWrapper<ProductInfo>().like("product_ref","dj"));
-        System.out.println(qty);
-    }
-
-    @Test
-    public  void testTrimColons(){
-        HttpClientPuller.trimColons("1:4:尺码:XXXL 100公分");
-    }
-
-    @Test
-    public void testNormalBaseImport(){
-        Map<AlibabaProductInfoPo, Multimap<String,String>> map = new HttpClientPuller().productInfoFromJson("533816674053");//533816674053 614252193570
-        Map.Entry<AlibabaProductInfoPo, Multimap<String, String>> entry =  map.entrySet().iterator().next();
-        AtomicInteger count = new AtomicInteger();
-
-        AlibabaProductInfoPo productInfoPo = entry.getKey();
-        Multimap<String,String> skus = entry.getValue();
-
-        skus.entries().forEach( e -> {
-            if(e.getValue() != null) {
-                productInfoPo.setSku(e.getValue());
-            }
-            productInfoPo.setSizePriceStock(e.getKey());
-            productInfoPo.setSourceSite("1688.com");
-            alibabaProductInfoPoMapper.insert(productInfoPo);
-            count.incrementAndGet();
-            System.out.println("正式入库：count" + count);
-        });
-    }
-
-    //分类
-    @Test
-    public void testClassify(){
+    public void classifyZJprovince(){
         List<ProductInfoSync> syncList = productInfoSyncMapper.
                 selectList(new QueryWrapper<ProductInfoSync>().lambda().like(ProductInfoSync::getKeyword,"浙江"));
         System.out.println(syncList.size());
@@ -171,25 +123,17 @@ class LearnApplicationTest {
             String keyword = sync.getKeyword();
             String[] words = keyword.split(" ");
             if(words.length > 1){
-                parent = words[0];
-                child  = words[1];
+                parent = words[1];
+                if(words.length>2){
+                    child  = words[2];
+                }
             }
             sync.setParent(parent);
             sync.setChild(child);
             productInfoSyncMapper.updateById(sync);
-            System.out.println("分类：" + parent + "---" + child);
+            System.out.println("分类：" + parent + "---" + child + "id:" + sync.getProductId());
         });
 
     }
 
-    @Test
-    public void AliProductProduce(){
-        productInfoSyncMapper.selectList(new QueryWrapper<ProductInfoSync>());
-    }
-
-
-
-
-
 }
-

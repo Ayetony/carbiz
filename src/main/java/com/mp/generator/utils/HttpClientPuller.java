@@ -6,9 +6,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mp.generator.entity.AlibabaProductInfoPo;
-import com.mp.generator.mapper.AlibabaProductInfoPoMapper;
-import com.mp.generator.service.IAlibabaProductInfoPoService;
-import com.mp.generator.service.impl.AlibabaProductInfoPoServiceImpl;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.ParseException;
@@ -22,17 +19,16 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
+
 
 public class HttpClientPuller {
 
-    private AtomicInteger count = new AtomicInteger();
 
     public static JsonElement getJsonByGetRequest(String id) {
 
          CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-        String oneBoundApi = "https://api.onebound.cn/1688/api_call.php?key=tel18606528273&secret=20200417&api_name=item_get&num_iid=";
-        HttpPost httpPost = new HttpPost(oneBoundApi + id);//"&cache=no"
+         String oneBoundApi = "https://api.onebound.cn/1688/api_call.php?key=tel18606528273&secret=20200417&api_name=item_get&num_iid=";
+         HttpPost httpPost = new HttpPost(oneBoundApi + id);//"&cache=no"
          // 响应模型
          CloseableHttpResponse response = null;
          String responseStr = "";
@@ -64,21 +60,23 @@ public class HttpClientPuller {
      }
 
     public static void main(String[] args) {
+        //产品详情解析
         new HttpClientPuller().productInfoFromJson("533816674053");//533816674053 614252193570
+
     }
 
 
-    public String  productInfoFromJson(String id) {
+    public Map<AlibabaProductInfoPo,Multimap<String,String>>  productInfoFromJson(String id) {
 
         JsonElement element = getJsonByGetRequest(id);
         if(element == null){
             System.out.println("空的错误");
             element = getJsonByGetRequest(id);
-            if(element == null) {
-                return "error --------" + id;
+            if(element == null) {  // post second request
+                return null;
             }
         }
-        AlibabaProductInfoPo productInfoPo = new AlibabaProductInfoPo();
+
         Map<String, String> propListMap = mapJson(element, "props_list");
         Map<String, String> imgPropMap = new HashMap<>();
         String crossBorderPro = "";
@@ -104,8 +102,8 @@ public class HttpClientPuller {
         String basic_price = element.getAsJsonObject().get("price").getAsString();
         String expree_fee = element.getAsJsonObject().get("express_fee").getAsString();
         String props = element.getAsJsonObject().get("props").toString();
-        String brand = element.getAsJsonObject().get("brand").toString();
-        String shop_id = element.getAsJsonObject().get("shop_id").toString();
+        String brand = element.getAsJsonObject().get("brand").getAsString();
+        String shop_id = element.getAsJsonObject().get("shop_id").getAsString();
 
         String currentPrice;
         if(!priceRange.equals("null") && StringUtils.isNotBlank(priceRange.replaceAll("\\[]",""))){
@@ -115,21 +113,7 @@ public class HttpClientPuller {
         }
 
         String  productLink = element.getAsJsonObject().get("detail_url").getAsString();
-    // 入库产品
-        productInfoPo.setProductRef(productLink);
-        productInfoPo.setCrossBorderPro(crossBorderPro);
-        productInfoPo.setProductImgLink(productImgLink);
-        productInfoPo.setCurrentPrice(currentPrice);
-        productInfoPo.setShopRef(shopRef);
-        productInfoPo.setDeliveryAddress(deliveryAddress);
-        productInfoPo.setTotalSaleThisMonth(totalSaleThisMonth);
-        productInfoPo.setShopName(shopName);
-        productInfoPo.setProductName(productName);
-        productInfoPo.setFastShippingFee(expree_fee);
-        productInfoPo.setProductDetail(props);
-        productInfoPo.setProductIDInSourceSite(productId);
-        productInfoPo.setBrand(brand);
-        productInfoPo.setShopID(shop_id);
+
 
 
         Multimap<String,String> skus = ArrayListMultimap.create();
@@ -159,25 +143,27 @@ public class HttpClientPuller {
             } );
         }
         skus.entries().forEach(HttpClientPuller::accept);
-        intoBase(skus,productInfoPo);
-        return "ok";
-    }
 
-    public void intoBase(Multimap<String, String> skus, AlibabaProductInfoPo alibabaProductInfoPo){
+        AlibabaProductInfoPo productInfoPo = new AlibabaProductInfoPo();
+        // 入库产品
+        productInfoPo.setProductRef(productLink);
+        productInfoPo.setCrossBorderPro(crossBorderPro);
+        productInfoPo.setProductImgLink(productImgLink);
+        productInfoPo.setCurrentPrice(currentPrice);
+        productInfoPo.setShopRef(shopRef);
+        productInfoPo.setDeliveryAddress(deliveryAddress);
+        productInfoPo.setTotalSaleThisMonth(totalSaleThisMonth);
+        productInfoPo.setShopName(shopName);
+        productInfoPo.setProductName(productName);
+        productInfoPo.setFastShippingFee(expree_fee);
+        productInfoPo.setProductDetail(props);
+        productInfoPo.setProductIDInSourceSite(productId);
+        productInfoPo.setBrand(brand.replace("\"",""));
+        productInfoPo.setShopID(shop_id);
 
-
-        for (Map.Entry<String, String> entry : skus.entries()) {
-            alibabaProductInfoPo.setSku(entry.getValue());
-            alibabaProductInfoPo.setSizePriceStock(entry.getKey());
-            alibabaProductInfoPo.setSourceSite("1688.com");
-            AlibabaProductInfoPoServiceImpl service = new AlibabaProductInfoPoServiceImpl();
-            System.out.println(alibabaProductInfoPo.toString());
-            service.getBaseMapper().insert(alibabaProductInfoPo);
-            count.incrementAndGet();
-            System.out.println("正式入库：count" + count);
-        }
-
-
+        Map<AlibabaProductInfoPo,Multimap<String,String>> hashMap = new HashMap<>();
+        hashMap.put(productInfoPo, skus);
+        return hashMap;
     }
 
 

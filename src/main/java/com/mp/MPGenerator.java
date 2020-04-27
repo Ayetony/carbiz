@@ -28,7 +28,7 @@ public class MPGenerator {
         String author = "ayetony";
 
         //表名,多表使用逗号分开
-        final String tableName = "alibaba_product_info_po";
+        final String tableName = "product_info_sync";
         //controller的url请求是否使用 "-" 形式如: true :/case-info false:/caseInfo
         boolean controllerMappingHyphenStyle = false;
         // 是否使用lombok
@@ -143,7 +143,7 @@ public class MPGenerator {
         strategy.setColumnNaming(NamingStrategy.underline_to_camel);
         strategy.setRestControllerStyle(restControllerStyle);
 //        strategy.setSuperEntityClass(superEntityClass);
-        strategy.setSuperEntityColumns("id");
+//        strategy.setSuperEntityColumns("id");
         strategy.setInclude(tableName.split(","));
 //        strategy.setTablePrefix(tablePrefix);
         strategy.setControllerMappingHyphenStyle(controllerMappingHyphenStyle);

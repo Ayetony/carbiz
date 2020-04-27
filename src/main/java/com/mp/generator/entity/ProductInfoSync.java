@@ -27,6 +27,10 @@ public class ProductInfoSync implements Serializable {
     @TableId(value = "product_id", type = IdType.ASSIGN_ID)
     private String productId;
 
+    private String parent;
+
+    private String child;
+
     private String productRef;
 
     private String productName;
