@@ -6,6 +6,7 @@ import com.mp.generator.entity.ProductInfoSync;
 import com.mp.generator.mapper.ProductInfoMapper;
 import com.mp.generator.mapper.ProductInfoSyncMapper;
 import com.mp.generator.utils.Extractor;
+import com.mp.generator.utils.HttpClientPuller;
 import com.mp.generator.utils.UrlParse;
 import org.apache.commons.lang.StringUtils;
 import org.junit.jupiter.api.Test;
@@ -126,6 +127,18 @@ class LearnApplicationTest {
         int qty = productInfoMapper.delete(new QueryWrapper<ProductInfo>().like("product_ref","dj"));
         System.out.println(qty);
     }
+
+    @Test
+    public  void testTrimColons(){
+        HttpClientPuller.trimColons("1:4:尺码:XXXL 100公分");
+    }
+
+    @Test
+    public void testNormalBaseImport(){
+        new HttpClientPuller().productInfoFromJson("533816674053");//533816674053 614252193570
+    }
+
+
 
 }
 

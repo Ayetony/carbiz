@@ -4,9 +4,7 @@ package com.mp.generator.controller;
 import com.mp.generator.utils.HttpClientPuller;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.ServletException;
@@ -45,8 +43,7 @@ public class ProductInfoController {
 
         request.setAttribute("message",HttpClientPuller.getJsonByGetRequest(queryId));
         request.getRequestDispatcher(request.getContextPath() + "/" + "index.jsp").forward(request,response);
-        return;
-//          return HttpClientPuller.getJsonByGetRequest(queryId);
+        //          return HttpClientPuller.getJsonByGetRequest(queryId);
     }
 
 

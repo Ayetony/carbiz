@@ -1,7 +1,7 @@
 package com.mp.generator.mapper;
 
-import com.mp.generator.entity.AlibabaProductInfoPo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.mp.generator.entity.AlibabaProductInfoPo;
 
 /**
  * <p>

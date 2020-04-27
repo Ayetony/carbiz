@@ -34,7 +34,7 @@ import java.util.List;
 @Controller
 public class SysUserController {
 
-    Logger logger = LoggerFactory.getLogger(ExcelProcess.class);
+    private Logger logger = LoggerFactory.getLogger(ExcelProcess.class);
 
     @RequestMapping("/mp")
     public String map(){
@@ -81,7 +81,7 @@ public class SysUserController {
     }
 
 
-    public ResponseEntity<FileSystemResource> export(File file) {
+    private ResponseEntity<FileSystemResource> export(File file) {
         if (file == null) {
             return null;
         }

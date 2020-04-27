@@ -1,7 +1,7 @@
 package com.mp.generator.service;
 
-import com.mp.generator.entity.AlibabaProductInfoPo;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.mp.generator.entity.AlibabaProductInfoPo;
 
 /**
  * <p>
