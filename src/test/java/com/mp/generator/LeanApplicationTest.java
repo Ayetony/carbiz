@@ -137,9 +137,50 @@ class LearnApplicationTest {
         HttpClientPuller.trimColons("1:4:尺码:XXXL 100公分");
     }
 
+    //分类
     @Test
-    public void testNormalBaseImport(){
-        Map<AlibabaProductInfoPo, Multimap<String,String>> map = new HttpClientPuller().productInfoFromJson("533816674053");//533816674053 614252193570
+    public void testClassify(){
+        List<ProductInfoSync> syncList = productInfoSyncMapper.
+                selectList(new QueryWrapper<ProductInfoSync>().lambda().like(ProductInfoSync::getKeyword,"浙江"));
+        System.out.println(syncList.size());
+
+        syncList.forEach( sync ->{
+            String parent = null;
+            String child = null;
+            String keyword = sync.getKeyword();
+            keyword = keyword.replace("浙江 ","");
+            String[] words = keyword.split(" ");
+            if(words.length > 0){
+                parent = words[0];
+                if(words.length>1) {
+                    child = words[1];
+                }
+            }
+            sync.setParent(parent);
+            sync.setChild(child);
+            productInfoSyncMapper.updateById(sync);
+            System.out.println("分类：" + parent + "---" + child);
+        });
+
+    }
+
+    @Test
+    public void AliProductProduce(){
+        AtomicInteger count = new AtomicInteger();
+        List<ProductInfoSync> productInfoSyncList = productInfoSyncMapper.selectList(new QueryWrapper<ProductInfoSync>().isNotNull(true,"parent").isNotNull(true,"child"));
+        productInfoSyncList.forEach(sync ->{
+            AlibabaProductInfoPo alibabaProductInfoPo = new AlibabaProductInfoPo();
+            testNormalBaseImport(sync);
+            count.incrementAndGet();
+            if(count.intValue() > 100){
+                System.exit(1);
+            }
+        });
+
+    }
+
+    public void testNormalBaseImport(ProductInfoSync sync){
+        Map<AlibabaProductInfoPo, Multimap<String,String>> map = new HttpClientPuller().productInfoFromJson(sync.getProductId());//533816674053 614252193570
         Map.Entry<AlibabaProductInfoPo, Multimap<String, String>> entry =  map.entrySet().iterator().next();
         AtomicInteger count = new AtomicInteger();
 
@@ -152,39 +193,12 @@ class LearnApplicationTest {
             }
             productInfoPo.setSizePriceStock(e.getKey());
             productInfoPo.setSourceSite("1688.com");
+            productInfoPo.setParentCatalog(sync.getParent());
+            productInfoPo.setChildCatalog(sync.getChild());
             alibabaProductInfoPoMapper.insert(productInfoPo);
             count.incrementAndGet();
             System.out.println("正式入库：count" + count);
         });
-    }
-
-    //分类
-    @Test
-    public void testClassify(){
-        List<ProductInfoSync> syncList = productInfoSyncMapper.
-                selectList(new QueryWrapper<ProductInfoSync>().lambda().like(ProductInfoSync::getKeyword,"浙江"));
-        System.out.println(syncList.size());
-
-        syncList.forEach( sync ->{
-            String parent = null;
-            String child = null;
-            String keyword = sync.getKeyword();
-            String[] words = keyword.split(" ");
-            if(words.length > 1){
-                parent = words[0];
-                child  = words[1];
-            }
-            sync.setParent(parent);
-            sync.setChild(child);
-            productInfoSyncMapper.updateById(sync);
-            System.out.println("分类：" + parent + "---" + child);
-        });
-
-    }
-
-    @Test
-    public void AliProductProduce(){
-        productInfoSyncMapper.selectList(new QueryWrapper<ProductInfoSync>());
     }
 
 

@@ -28,7 +28,7 @@ public class ProductSyncTableTask {
     @Autowired
     ProductInfoSyncMapper productInfoSyncMapper;
 
-    @Scheduled(fixedRate = 1000*60*60*3)
+    @Scheduled(fixedRate = 1000*60*60*4)
     private void syncOcptusProductInfoTask(){
         //删除 product_info dj 临时链接
         int delDj = productInfoMapper.delete(new QueryWrapper<ProductInfo>().like("product_ref","dj"));
@@ -78,7 +78,7 @@ public class ProductSyncTableTask {
         System.out.println("入库成功：" + count);
     }
 
-    @Scheduled(fixedRate = 1000*60*60*7)
+    @Scheduled(cron = "0 0 12 22 * * ?")
     private void classifyTask(){
           classifyZJprovince();
     }
@@ -114,18 +114,21 @@ public class ProductSyncTableTask {
 
     public void classifyZJprovince(){
         List<ProductInfoSync> syncList = productInfoSyncMapper.
-                selectList(new QueryWrapper<ProductInfoSync>().lambda().like(ProductInfoSync::getKeyword,"浙江"));
+                selectList(new QueryWrapper<ProductInfoSync>()
+                        .lambda().like(ProductInfoSync::getKeyword,"浙江")
+                        .isNotNull(true,ProductInfoSync::getParent).isNotNull(true,ProductInfoSync::getChild));
         System.out.println(syncList.size());
 
         syncList.forEach( sync ->{
             String parent = null;
             String child = null;
             String keyword = sync.getKeyword();
+            keyword = keyword.replace("浙江 ","");
             String[] words = keyword.split(" ");
-            if(words.length > 1){
-                parent = words[1];
-                if(words.length>2){
-                    child  = words[2];
+            if(words.length > 0){
+                parent = words[0];
+                if(words.length>1) {
+                    child = words[1];
                 }
             }
             sync.setParent(parent);
