@@ -1,7 +1,6 @@
 package com.mp.generator;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.google.common.collect.Multimap;
 import com.mp.generator.entity.AlibabaProductInfoPo;
 import com.mp.generator.entity.ProductInfo;
@@ -23,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
@@ -39,11 +39,10 @@ class LearnApplicationTest {
     AlibabaProductInfoPoMapper alibabaProductInfoPoMapper;
 
 
-
     @Test
     public void testSelect() {
         //删除 product_info dj 临时链接
-        int delDj = productInfoMapper.delete(new QueryWrapper<ProductInfo>().like("product_ref","dj"));
+        int delDj = productInfoMapper.delete(new QueryWrapper<ProductInfo>().like("product_ref", "dj"));
         System.out.println("删除 product_info dj-link： " + delDj + "条");
         //同步表sync the table
         System.out.println(" base sync method test --------");
@@ -75,8 +74,8 @@ class LearnApplicationTest {
             sync.setShopRef(productInfo.getShopRef());
             ProductInfoSync syncQuery = productInfoSyncMapper.selectById(productInfo.getProductId());
             if (syncQuery != null) {
-                String message = diff(syncQuery,sync);
-                if(StringUtils.isNotBlank(message)) {
+                String message = diff(syncQuery, sync);
+                if (StringUtils.isNotBlank(message)) {
                     sync.setUpdateTimes(syncQuery.getUpdateTimes() + 1);
                     productInfoSyncMapper.updateById(sync);
                     System.out.println("update id=" + sync.getProductId() + ",更新:" + message + " ;updateCount" + updateCount.getAndIncrement());
@@ -92,31 +91,31 @@ class LearnApplicationTest {
     }
 
     @Test
-    public void testId(){
+    public void testId() {
         ProductInfoSync sync = productInfoSyncMapper.selectById("44307401770");
         System.out.println(sync.getProductName());
     }
 
-    public static String diff(ProductInfoSync old, ProductInfoSync sync){
+    public static String diff(ProductInfoSync old, ProductInfoSync sync) {
 
         String message = "";
-        if(!StringUtils.equals(old.getProductName(),sync.getProductName())){
-           message += "Old-ProductName:" + old.getProductName() + "; New-ProductName:" + sync.getProductName();
+        if (!StringUtils.equals(old.getProductName(), sync.getProductName())) {
+            message += "Old-ProductName:" + old.getProductName() + "; New-ProductName:" + sync.getProductName();
         }
 
-        if(!StringUtils.equals(old.getShopName(),sync.getShopName())){
+        if (!StringUtils.equals(old.getShopName(), sync.getShopName())) {
             message += "Old-ShopName:" + old.getShopName() + "; New-ShopName:" + sync.getShopName();
         }
 
-        if(old.getCurrentPrice().intValue()!=sync.getCurrentPrice().intValue()){
-            message +=  "Old-CurrentPrice:" + old.getCurrentPrice() + "; New-CurrentPrice:" + sync.getCurrentPrice();
+        if (old.getCurrentPrice().intValue() != sync.getCurrentPrice().intValue()) {
+            message += "Old-CurrentPrice:" + old.getCurrentPrice() + "; New-CurrentPrice:" + sync.getCurrentPrice();
         }
 
-        if(old.getLoyalYears().intValue()!=sync.getLoyalYears().intValue()){
+        if (old.getLoyalYears().intValue() != sync.getLoyalYears().intValue()) {
             message += "Old-LoyalYears:" + old.getLoyalYears() + "; New-LoyalYears:" + sync.getLoyalYears();
         }
 
-        if(old.getTotalSaleThisMonth().intValue() != sync.getTotalSaleThisMonth().intValue()){
+        if (old.getTotalSaleThisMonth().intValue() != sync.getTotalSaleThisMonth().intValue()) {
             message += "Old-TotalSaleThisMonth:" + old.getTotalSaleThisMonth() + "; New-TotalSaleThisMonth:" + sync.getTotalSaleThisMonth();
         }
 
@@ -127,33 +126,35 @@ class LearnApplicationTest {
 
 
     @Test
-    public void testDj(){
-        int qty = productInfoMapper.delete(new QueryWrapper<ProductInfo>().like("product_ref","dj"));
+    public void testDj() {
+        int qty = productInfoMapper.delete(new QueryWrapper<ProductInfo>().like("product_ref", "dj"));
         System.out.println(qty);
     }
 
     @Test
-    public  void testTrimColons(){
+    public void testTrimColons() {
         HttpClientPuller.trimColons("1:4:尺码:XXXL 100公分");
     }
 
     //分类
     @Test
-    public void testClassify(){
+    public void testClassify() {
         List<ProductInfoSync> syncList = productInfoSyncMapper.
-                selectList(new QueryWrapper<ProductInfoSync>().lambda().like(ProductInfoSync::getKeyword,"浙江")
-                .isNull(true,ProductInfoSync::getParent).or().eq(ProductInfoSync::getChild,""));;
+                selectList(new QueryWrapper<ProductInfoSync>()
+                        .lambda().like(ProductInfoSync::getKeyword, "浙江")
+                        .and(Wrapper -> Wrapper.isNull(ProductInfoSync::getChild)
+                                .or().eq(ProductInfoSync::getChild, "")));
         System.out.println(syncList.size());
 
-        syncList.forEach( sync ->{
+        syncList.forEach(sync -> {
             String parent = null;
             String child = null;
             String keyword = sync.getKeyword();
-            keyword = keyword.replace("浙江 ","");
+            keyword = keyword.replace("浙江 ", "");
             String[] words = keyword.split(" ");
-            if(words.length > 0){
+            if (words.length > 0) {
                 parent = words[0];
-                if(words.length>1) {
+                if (words.length > 1) {
                     child = words[1];
                 }
             }
@@ -166,36 +167,70 @@ class LearnApplicationTest {
     }
 
     @Test
-    public void AliProductProduce(){
+    public void AliProductProduce() {
         AtomicInteger count = new AtomicInteger();
-        List<ProductInfoSync> productInfoSyncList = productInfoSyncMapper.selectList(new QueryWrapper<ProductInfoSync>()
-                .isNotNull(true,"parent").isNotNull(true,"child").or()
-                .ne(true,"child","").ne(true,"parent",""));
-        productInfoSyncList.forEach(sync ->{
-            AlibabaProductInfoPo alibabaProductInfoPo = new AlibabaProductInfoPo();
-            try{
-                testNormalBaseImport(sync);
-            }catch (IllegalStateException e){
-                throw new RuntimeException("Not a Json object 异常 id:" + sync.getProductId());
+        List<ProductInfoSync> productInfoSyncList = productInfoSyncMapper.selectList(new QueryWrapper<ProductInfoSync>().like("keyword", "浙江")
+                .isNotNull(true, "parent").and(Wrapper -> Wrapper.isNotNull(true, "child")));
+
+        for (ProductInfoSync sync : productInfoSyncList) {
+
+            try {
+
+                if (!isExist(sync)) {
+                    AlibabaProductInfoPo alibabaProductInfoPo = new AlibabaProductInfoPo();
+                    if(!normalBaseImport(sync)){
+                        System.out.println("request missing:" + sync.getProductId());
+                        continue;
+                    }
+                    count.incrementAndGet();
+                    if (count.intValue() > 100) {
+                        System.exit(1);
+                    }
+                }
+                System.out.println("SKip product id :" + sync.getProductId());
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new RuntimeException("异常id" + sync.getProductId());
             }
-            count.incrementAndGet();
-            if(count.intValue() > 100){
-                System.exit(1);
-            }
-        });
+
+
+        }
+
+
 
     }
 
-    public void testNormalBaseImport(ProductInfoSync sync){
-        Map<AlibabaProductInfoPo, Multimap<String,String>> map = new HttpClientPuller().productInfoFromJson(sync.getProductId());//533816674053 614252193570
-        Map.Entry<AlibabaProductInfoPo, Multimap<String, String>> entry =  map.entrySet().iterator().next();
+    public boolean isExist(ProductInfoSync sync) {
+
+        Integer count = alibabaProductInfoPoMapper.selectCount(new QueryWrapper<AlibabaProductInfoPo>().eq("product_i_d_in_source_site", sync.getProductId()));
+        return count > 0;
+
+    }
+
+    @Test
+    public void testIsExist() {
+        ProductInfoSync sync = new ProductInfoSync();
+        sync.setProductId("1024077305");
+        isExist(sync);
+
+    }
+
+
+    public boolean normalBaseImport(ProductInfoSync sync) {
+        Map<AlibabaProductInfoPo, Multimap<String, String>> map = new HttpClientPuller().productInfoFromJson(sync.getProductId());//533816674053 614252193570
+        if(map == null){
+            return false;
+        }
+        Map.Entry<AlibabaProductInfoPo, Multimap<String, String>> entry = map.entrySet().iterator().next();
         AtomicInteger count = new AtomicInteger();
 
         AlibabaProductInfoPo productInfoPo = entry.getKey();
-        Multimap<String,String> skus = entry.getValue();
+        Multimap<String, String> skus = entry.getValue();
 
-        skus.entries().forEach( e -> {
-            if(e.getValue() != null) {
+        skus.entries().forEach(e -> {
+            if (e.getValue() != null) {
                 productInfoPo.setSku(e.getValue());
             }
             productInfoPo.setSizePriceStock(e.getKey());
@@ -207,14 +242,16 @@ class LearnApplicationTest {
             count.incrementAndGet();
             System.out.println("正式入库：count" + count);
         });
+
+        return true;
     }
 
 
-   @Test
-    public void testSplit(){
+    @Test
+    public void testSplit() {
         String test = "颜色:粉底白点";
-       System.out.println(test.split(";")[0]);
-   }
+        System.out.println(test.split(";")[0]);
+    }
 
 
 }

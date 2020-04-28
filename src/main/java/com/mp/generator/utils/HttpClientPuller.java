@@ -61,7 +61,7 @@ public class HttpClientPuller {
 
     public static void main(String[] args) {
         //产品详情解析
-        new HttpClientPuller().productInfoFromJson("533816674053");//533816674053 614252193570
+        new HttpClientPuller().productInfoFromJson("1136562860");//533816674053 614252193570
 
     }
 
@@ -70,12 +70,18 @@ public class HttpClientPuller {
 
         JsonElement element = getJsonByGetRequest(id);
         if(element == null){
-            System.out.println("空的错误");
             element = getJsonByGetRequest(id);
             if(element == null) {  // post second request
                 return null;
             }
         }
+        //props_list 不能为空
+        String flag = element.getAsJsonObject().get("props_list").toString();
+        System.out.println("map json flag" + flag);
+        if(StringUtils.equals(flag,"[]")){
+            return null;
+        }
+
 
         Map<String, String> propListMap = mapJson(element, "props_list");
         Map<String, String> imgPropMap = new HashMap<>();
@@ -106,7 +112,7 @@ public class HttpClientPuller {
         String shop_id = element.getAsJsonObject().get("shop_id").getAsString();
 
         String currentPrice;
-        if(!priceRange.equals("null") && StringUtils.isNotBlank(priceRange.replaceAll("\\[]",""))){
+        if(!priceRange.equals("null") && StringUtils.isNotBlank(priceRange.replace("[]",""))){
             currentPrice = priceRange;
         }else{
             currentPrice = "["+ min_num + "," + basic_price + "]";
@@ -117,7 +123,7 @@ public class HttpClientPuller {
 
 
         Multimap<String,String> skus = ArrayListMultimap.create();
-        if(StringUtils.isBlank(element.getAsJsonObject().get("props_img").toString().replaceAll("\\[]" ,""))){
+        if(StringUtils.isBlank(element.getAsJsonObject().get("props_img").toString().replace("[]" ,""))){
             element.getAsJsonObject().get("skus").getAsJsonObject().get("sku").
                     getAsJsonArray().forEach( e -> {
                 String name = e.getAsJsonObject().get("properties_name").getAsString();
@@ -178,10 +184,10 @@ public class HttpClientPuller {
 
     private static JsonElement  purify(String json){
         JsonParser parser = new JsonParser();
-        JsonElement element =  parser.parse(json).getAsJsonObject().get("item").getAsJsonObject();
-        if(element.isJsonNull()){
+        JsonElement element =  parser.parse(json).getAsJsonObject().get("item");
+        System.out.println(element.toString());
+        if(element.toString().equals("\"\""))
             return null;
-        }
         return  element;
     }
 
@@ -189,8 +195,12 @@ public class HttpClientPuller {
     private static Map<String,String> mapJson(JsonElement element, String key){
 
         Map<String,String> hashMap = new HashMap<>();
-        element.getAsJsonObject().get(key).getAsJsonObject().entrySet().forEach( e -> hashMap.put(e.getKey().replace("\"",""),
-                e.getValue().toString().replace("\"","")));
+        try {
+            element.getAsJsonObject().get(key).getAsJsonObject().entrySet().forEach(e -> hashMap.put(e.getKey().replace("\"", ""),
+                    e.getValue().toString().replace("\"", "")));
+        }catch (IllegalStateException e){
+            throw new RuntimeException("element:" + element);
+        }
         return hashMap;
 
     }
