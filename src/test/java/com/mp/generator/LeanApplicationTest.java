@@ -136,7 +136,7 @@ class LearnApplicationTest {
         HttpClientPuller.trimColons("1:4:尺码:XXXL 100公分");
     }
 
-    //分类
+    //分类浙江
     @Test
     public void testClassify() {
         List<ProductInfoSync> syncList = productInfoSyncMapper.
@@ -144,6 +144,36 @@ class LearnApplicationTest {
                         .lambda().like(ProductInfoSync::getKeyword, "浙江")
                         .and(Wrapper -> Wrapper.isNull(ProductInfoSync::getChild)
                                 .or().eq(ProductInfoSync::getChild, "")));
+        System.out.println(syncList.size());
+
+        syncList.forEach(sync -> {
+            String parent = null;
+            String child = null;
+            String keyword = sync.getKeyword();
+            keyword = keyword.replace("浙江 ", "");
+            String[] words = keyword.split(" ");
+            if (words.length > 0) {
+                parent = words[0];
+                if (words.length > 1) {
+                    child = words[1];
+                }
+            }
+            sync.setParent(parent);
+            sync.setChild(child);
+            productInfoSyncMapper.updateById(sync);
+            System.out.println("分类：" + parent + "---" + child);
+        });
+
+    }
+
+    //分类广东
+    @Test
+    public void testClassifyCanton() {
+        List<ProductInfoSync> syncList = productInfoSyncMapper.
+                selectList(new QueryWrapper<ProductInfoSync>()
+                        .lambda().like(ProductInfoSync::getKeyword, "浙江"));
+//                        .and(Wrapper -> Wrapper.isNull(ProductInfoSync::getChild)
+//                                .or().eq(ProductInfoSync::getChild, "")));
         System.out.println(syncList.size());
 
         syncList.forEach(sync -> {
@@ -183,7 +213,7 @@ class LearnApplicationTest {
                         continue;
                     }
                     count.incrementAndGet();
-                    if (count.intValue() > 100) {
+                    if (count.intValue() > 1000) {
                         System.exit(1);
                     }
                 }

@@ -24,11 +24,17 @@ import java.util.Map;
 public class HttpClientPuller {
 
 
-    public static JsonElement getJsonByGetRequest(String id) {
+    public static JsonElement getJsonByGetRequest(String id,boolean nocache) {
 
          CloseableHttpClient httpClient = HttpClientBuilder.create().build();
          String oneBoundApi = "https://api.onebound.cn/1688/api_call.php?key=tel18606528273&secret=20200417&api_name=item_get&num_iid=";
-         HttpPost httpPost = new HttpPost(oneBoundApi + id);//"&cache=no"
+
+         HttpPost httpPost ;
+        if(nocache){
+            httpPost = new HttpPost(oneBoundApi + id);//"&cache=no"
+        }else {
+            httpPost = new HttpPost(oneBoundApi + "&cache=no" + id);
+        }
          // 响应模型
          CloseableHttpResponse response = null;
          String responseStr = "";
@@ -68,17 +74,15 @@ public class HttpClientPuller {
 
     public Map<AlibabaProductInfoPo,Multimap<String,String>>  productInfoFromJson(String id) {
 
-        JsonElement element = getJsonByGetRequest(id);
-        if(element == null){
-            element = getJsonByGetRequest(id);
-            if(element == null) {  // post second request
-                return null;
-            }
+        JsonElement element = getJsonByGetRequest(id,true);
+        if( element == null || !element.isJsonObject()){
+            System.out.println("missing content item :" + element + id);
+            return null;
         }
         //props_list 不能为空
-        String flag = element.getAsJsonObject().get("props_list").toString();
-        System.out.println("map json flag" + flag);
-        if(StringUtils.equals(flag,"[]")){
+        JsonElement elementFlag = element.getAsJsonObject().get("props_list");
+        if(elementFlag==null || !elementFlag.isJsonObject()){
+            System.out.println("missing content props list : " + elementFlag + id );
             return null;
         }
 
@@ -123,7 +127,9 @@ public class HttpClientPuller {
 
 
         Multimap<String,String> skus = ArrayListMultimap.create();
-        if(StringUtils.isBlank(element.getAsJsonObject().get("props_img").toString().replace("[]" ,""))){
+        JsonElement img = element.getAsJsonObject().get("props_img");
+        // Judge the existence
+        if( img == null || !img.isJsonObject()){
             element.getAsJsonObject().get("skus").getAsJsonObject().get("sku").
                     getAsJsonArray().forEach( e -> {
                 String name = e.getAsJsonObject().get("properties_name").getAsString();
@@ -183,12 +189,9 @@ public class HttpClientPuller {
     }
 
     private static JsonElement  purify(String json){
-        JsonParser parser = new JsonParser();
-        JsonElement element =  parser.parse(json).getAsJsonObject().get("item");
-        System.out.println(element.toString());
-        if(element.toString().equals("\"\""))
-            return null;
-        return  element;
+        JsonParser parser;
+        parser = new JsonParser();
+        return parser.parse(json).getAsJsonObject().get("item");
     }
 
 
