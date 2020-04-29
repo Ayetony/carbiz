@@ -116,7 +116,7 @@ public class HttpClientPuller {
         String shop_id = element.getAsJsonObject().get("shop_id").getAsString();
 
         String currentPrice;
-        if(!priceRange.equals("null") && StringUtils.isNotBlank(priceRange.replace("[]",""))){
+        if(StringUtils.isNotBlank(priceRange.replace("[]","")) && !priceRange.equals("null")){
             currentPrice = priceRange;
         }else{
             currentPrice = "["+ min_num + "," + basic_price + "]";
@@ -191,6 +191,9 @@ public class HttpClientPuller {
     private static JsonElement  purify(String json){
         JsonParser parser;
         parser = new JsonParser();
+        if(json == null){
+            return null;
+        }
         return parser.parse(json).getAsJsonObject().get("item");
     }
 
