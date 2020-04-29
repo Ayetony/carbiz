@@ -2,9 +2,7 @@ package com.mp.generator.utils;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 import com.mp.generator.entity.AlibabaProductInfoPo;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpEntity;
@@ -48,7 +46,6 @@ public class HttpClientPuller {
              if(!status.contains("200")){
                  return null;
              }
-
              if (responseEntity != null) {
                  responseStr = EntityUtils.toString(responseEntity, StandardCharsets.UTF_8);
              }
@@ -79,7 +76,7 @@ public class HttpClientPuller {
 
     public Map<AlibabaProductInfoPo,Multimap<String,String>>  productInfoFromJson(String id) {
 
-        JsonElement element = getJsonByGetRequest(id,false);
+        JsonElement element = getJsonByGetRequest(id,true);
         if( element == null || !element.isJsonObject()){
             System.out.println("missing content item :" + element + id);
             return null;
@@ -119,7 +116,6 @@ public class HttpClientPuller {
         String props = element.getAsJsonObject().get("props").toString();
         String brand = element.getAsJsonObject().get("brand").getAsString();
         String shop_id = element.getAsJsonObject().get("shop_id").getAsString();
-
 
         String currentPrice;
         if(StringUtils.isNotBlank(priceRange.replace("[]","")) && !priceRange.equals("null")){
@@ -195,12 +191,17 @@ public class HttpClientPuller {
     }
 
     private static JsonElement  purify(String json){
-        JsonParser parser;
-        parser = new JsonParser();
+
         if(json == null){
             return null;
         }
-        return parser.parse(json).getAsJsonObject().get("item");
+        JsonParser parser;
+        parser = new JsonParser();
+        JsonObject jsonObject = parser.parse(json).getAsJsonObject();
+        if(jsonObject.isJsonObject()){
+            return jsonObject.get("item");
+        }
+        return null;
     }
 
 

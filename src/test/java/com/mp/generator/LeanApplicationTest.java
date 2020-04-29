@@ -1,6 +1,8 @@
 package com.mp.generator;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.google.common.collect.Multimap;
 import com.mp.generator.entity.AlibabaProductInfoPo;
 import com.mp.generator.entity.ProductInfo;
@@ -11,7 +13,6 @@ import com.mp.generator.mapper.ProductInfoSyncMapper;
 import com.mp.generator.utils.Extractor;
 import com.mp.generator.utils.HttpClientPuller;
 import com.mp.generator.utils.UrlParse;
-import com.sun.corba.se.impl.orbutil.concurrent.Sync;
 import org.apache.commons.lang.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -72,12 +73,14 @@ class LearnApplicationTest {
             sync.setShopId(productInfo.getShopId());
             sync.setProductRef(productInfo.getProductRef());
             sync.setShopRef(productInfo.getShopRef());
-            ProductInfoSync syncQuery = productInfoSyncMapper.selectById(productInfo.getProductId());
+            ProductInfoSync syncQuery = productInfoSyncMapper
+                    .selectOne(new QueryWrapper<ProductInfoSync>().lambda().eq(ProductInfoSync::getProductId, productInfo.getProductId()));
             if (syncQuery != null) {
                 String message = diff(syncQuery, sync);
                 if (StringUtils.isNotBlank(message)) {
                     sync.setUpdateTimes(syncQuery.getUpdateTimes() + 1);
-                    productInfoSyncMapper.updateById(sync);
+//                    productInfoSyncMapper.updateById(sync);
+                    updateSync(sync);
                     System.out.println("update id=" + sync.getProductId() + ",更新:" + message + " ;updateCount" + updateCount.getAndIncrement());
                 }
             } else {
@@ -87,8 +90,19 @@ class LearnApplicationTest {
             }
         });
         System.out.println("入库成功：" + count);
-
     }
+
+    public void updateSync(ProductInfoSync sync){
+        LambdaUpdateWrapper<ProductInfoSync> updateWrapper = new UpdateWrapper<ProductInfoSync>().lambda();
+        updateWrapper
+                .set(ProductInfoSync::getUpdateTimes, sync.getUpdateTimes())
+                .set(ProductInfoSync::getShopName,sync.getShopName())
+                .set(ProductInfoSync::getCurrentPrice,sync.getCurrentPrice())
+                .set(ProductInfoSync::getTotalSaleThisMonth,sync.getTotalSaleThisMonth())
+                .eq(ProductInfoSync::getProductId,sync.getProductId());
+        productInfoSyncMapper.update(null,updateWrapper);
+    }
+
 
     @Test
     public void testId() {
@@ -201,17 +215,16 @@ class LearnApplicationTest {
         AtomicInteger count = new AtomicInteger();
         List<ProductInfoSync> productInfoSyncList = productInfoSyncMapper.selectList(new QueryWrapper<ProductInfoSync>().like("keyword", "浙江")
                 .isNotNull(true, "parent").and(Wrapper -> Wrapper.isNotNull(true, "child")));
-
         for (ProductInfoSync sync : productInfoSyncList) {
             try {
                 if (!isSkuSkip(sync) && !isExist(sync)) {//不存在于生产数据表，而且is_skip不为1
                     if(!normalBaseImport(sync)){//api导入
                         int tag = tagSkip(sync);
-                        System.out.println("request missing:" + sync.getProductId() + ";tagging skip:" + tag);
+                        System.out.println("request missing:" + sync.getProductId() + ";tagging skip qty:" + tag);
                         continue;
                     }
                     count.incrementAndGet();
-                    if (count.intValue() > 1000) {
+                    if (count.intValue() > 10000) {
                         System.exit(1);
                     }
                 }
@@ -223,12 +236,36 @@ class LearnApplicationTest {
         }
     }
 
-    //给产品同步表打标签
+    //给产品同步表打标签test
+    @Test
+    public void tagSkipTest(){
+        ProductInfoSync sync = new ProductInfoSync();
+        sync.setIsSkip(1);
+        sync.setProductId("1165850125");
+        LambdaUpdateWrapper<ProductInfoSync> updateWrapper = new UpdateWrapper<ProductInfoSync>().lambda();
+        updateWrapper
+                .set(ProductInfoSync::getIsSkip,1)
+                .eq(ProductInfoSync::getProductId,sync.getProductId());
+        int  result = productInfoSyncMapper.update(null,updateWrapper);
+        System.out.println(result);
+    }
+
+
     public int tagSkip(ProductInfoSync sync){
 
-        return productInfoSyncMapper.updateById(sync.setIsSkip(1));
+        // updateWrapper 更新指定的字段
+        sync.setIsSkip(1);
+        sync.setProductId("1165850125");
+        LambdaUpdateWrapper<ProductInfoSync> updateWrapper = new UpdateWrapper<ProductInfoSync>().lambda();
+        updateWrapper
+                .set(ProductInfoSync::getIsSkip,1)
+                .eq(ProductInfoSync::getProductId,sync.getProductId());
+        int  result = productInfoSyncMapper.update(null,updateWrapper);
+        return result;
 
     }
+
+
 
     //判断是否跳过不存在sku的
     public boolean isSkuSkip(ProductInfoSync sync){
@@ -237,10 +274,8 @@ class LearnApplicationTest {
 
 
     public boolean isExist(ProductInfoSync sync) {
-
         Integer count = alibabaProductInfoPoMapper.selectCount(new QueryWrapper<AlibabaProductInfoPo>().eq("product_i_d_in_source_site", sync.getProductId()));
         return count > 0;
-
     }
 
     @Test
@@ -249,6 +284,13 @@ class LearnApplicationTest {
         sync.setProductId("1024077305");
         isExist(sync);
 
+    }
+
+    // 主键重复
+    @Test
+    public void testDuplicate(){
+        ProductInfoSync sync = new ProductInfoSync();
+        sync.setProductId("554203983307");
     }
 
 
