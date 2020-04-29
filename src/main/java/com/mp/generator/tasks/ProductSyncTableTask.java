@@ -1,7 +1,5 @@
 package com.mp.generator.tasks;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.google.common.collect.Multimap;
 import com.mp.generator.entity.AlibabaProductInfoPo;

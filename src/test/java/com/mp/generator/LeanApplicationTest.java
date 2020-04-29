@@ -11,6 +11,7 @@ import com.mp.generator.mapper.ProductInfoSyncMapper;
 import com.mp.generator.utils.Extractor;
 import com.mp.generator.utils.HttpClientPuller;
 import com.mp.generator.utils.UrlParse;
+import com.sun.corba.se.impl.orbutil.concurrent.Sync;
 import org.apache.commons.lang.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -22,7 +23,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
@@ -40,7 +40,7 @@ class LearnApplicationTest {
 
 
     @Test
-    public void testSelect() {
+    public void testSelect() {//八爪鱼表数据删除dj链接，去重后导入到sync产品表
         //删除 product_info dj 临时链接
         int delDj = productInfoMapper.delete(new QueryWrapper<ProductInfo>().like("product_ref", "dj"));
         System.out.println("删除 product_info dj-link： " + delDj + "条");
@@ -203,13 +203,11 @@ class LearnApplicationTest {
                 .isNotNull(true, "parent").and(Wrapper -> Wrapper.isNotNull(true, "child")));
 
         for (ProductInfoSync sync : productInfoSyncList) {
-
             try {
-
-                if (!isExist(sync)) {
-                    AlibabaProductInfoPo alibabaProductInfoPo = new AlibabaProductInfoPo();
-                    if(!normalBaseImport(sync)){
-                        System.out.println("request missing:" + sync.getProductId());
+                if (!isSkuSkip(sync) && !isExist(sync)) {//不存在于生产数据表，而且is_skip不为1
+                    if(!normalBaseImport(sync)){//api导入
+                        int tag = tagSkip(sync);
+                        System.out.println("request missing:" + sync.getProductId() + ";tagging skip:" + tag);
                         continue;
                     }
                     count.incrementAndGet();
@@ -217,20 +215,26 @@ class LearnApplicationTest {
                         System.exit(1);
                     }
                 }
-                System.out.println("SKip product id :" + sync.getProductId());
-
-
+                System.out.println("SKip existing product id :" + sync.getProductId());
             } catch (Exception e) {
                 e.printStackTrace();
                 throw new RuntimeException("异常id" + sync.getProductId());
             }
-
-
         }
+    }
 
+    //给产品同步表打标签
+    public int tagSkip(ProductInfoSync sync){
 
+        return productInfoSyncMapper.updateById(sync.setIsSkip(1));
 
     }
+
+    //判断是否跳过不存在sku的
+    public boolean isSkuSkip(ProductInfoSync sync){
+        return sync.getIsSkip() == 1;
+    }
+
 
     public boolean isExist(ProductInfoSync sync) {
 
@@ -256,19 +260,19 @@ class LearnApplicationTest {
         Map.Entry<AlibabaProductInfoPo, Multimap<String, String>> entry = map.entrySet().iterator().next();
         AtomicInteger count = new AtomicInteger();
 
-        AlibabaProductInfoPo productInfoPo = entry.getKey();
+        AlibabaProductInfoPo alibabaProductInfoPo = entry.getKey();
         Multimap<String, String> skus = entry.getValue();
 
         skus.entries().forEach(e -> {
             if (e.getValue() != null) {
-                productInfoPo.setSku(e.getValue());
+                alibabaProductInfoPo.setSku(e.getValue());
             }
-            productInfoPo.setSizePriceStock(e.getKey());
-            productInfoPo.setSourceSite("1688.com");
-            productInfoPo.setParentCatalog(sync.getParent());
-            productInfoPo.setChildCatalog(sync.getChild());
-            productInfoPo.setKeyword(sync.getKeyword());
-            alibabaProductInfoPoMapper.insert(productInfoPo);
+            alibabaProductInfoPo.setSizePriceStock(e.getKey());
+            alibabaProductInfoPo.setSourceSite("1688.com");
+            alibabaProductInfoPo.setParentCatalog(sync.getParent());
+            alibabaProductInfoPo.setChildCatalog(sync.getChild());
+            alibabaProductInfoPo.setKeyword(sync.getKeyword());
+            alibabaProductInfoPoMapper.insert(alibabaProductInfoPo);
             count.incrementAndGet();
             System.out.println("正式入库：count" + count);
         });

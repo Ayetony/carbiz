@@ -28,7 +28,7 @@ public class MPGenerator {
         String author = "ayetony";
 
         //表名,多表使用逗号分开
-        final String tableName = "product_info_sync";
+        final String tableName = "product_info_sync"; //alibaba_product_info_po
         //controller的url请求是否使用 "-" 形式如: true :/case-info false:/caseInfo
         boolean controllerMappingHyphenStyle = false;
         // 是否使用lombok

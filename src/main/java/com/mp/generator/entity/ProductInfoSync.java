@@ -2,20 +2,17 @@ package com.mp.generator.entity;
 
 import java.time.LocalDateTime;
 import java.io.Serializable;
-
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author ayetony
- * @since 2020-04-23
+ * @since 2020-04-29
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -24,7 +21,6 @@ public class ProductInfoSync implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "product_id", type = IdType.ASSIGN_ID)
     private String productId;
 
     private String parent;
@@ -56,6 +52,11 @@ public class ProductInfoSync implements Serializable {
     private LocalDateTime updateTime;
 
     private Integer updateTimes;
+
+    /**
+     * 跳过1，不跳过0
+     */
+    private Integer isSkip;
 
 
 }

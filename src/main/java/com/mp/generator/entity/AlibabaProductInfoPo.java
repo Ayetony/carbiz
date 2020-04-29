@@ -177,6 +177,15 @@ public class AlibabaProductInfoPo implements Serializable {
      * 品牌
      */
     private String brand;
+    /**
+     * 爬虫类型id
+     */
+    private Integer crawlId;
+
+    /**
+     * 爬虫地址
+     */
+    private String crawlLink;
 
 
 }

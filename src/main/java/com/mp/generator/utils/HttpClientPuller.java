@@ -79,7 +79,7 @@ public class HttpClientPuller {
 
     public Map<AlibabaProductInfoPo,Multimap<String,String>>  productInfoFromJson(String id) {
 
-        JsonElement element = getJsonByGetRequest(id,true);
+        JsonElement element = getJsonByGetRequest(id,false);
         if( element == null || !element.isJsonObject()){
             System.out.println("missing content item :" + element + id);
             return null;
@@ -119,6 +119,7 @@ public class HttpClientPuller {
         String props = element.getAsJsonObject().get("props").toString();
         String brand = element.getAsJsonObject().get("brand").getAsString();
         String shop_id = element.getAsJsonObject().get("shop_id").getAsString();
+
 
         String currentPrice;
         if(StringUtils.isNotBlank(priceRange.replace("[]","")) && !priceRange.equals("null")){
