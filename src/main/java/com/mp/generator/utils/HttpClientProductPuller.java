@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class HttpClientPuller {
+public class HttpClientProductPuller {
 
 
     public static JsonElement getJsonByGetRequest(String id,boolean nocache) {
@@ -69,7 +69,7 @@ public class HttpClientPuller {
 
     public static void main(String[] args) {
         //产品详情解析
-        new HttpClientPuller().productInfoFromJson("1136562860");//533816674053 614252193570
+        new HttpClientProductPuller().productInfoFromJson("1136562860");//533816674053 614252193570
 
     }
 
@@ -159,7 +159,7 @@ public class HttpClientPuller {
                 skus.put(trimColons(size) + ";"+ color + ";" + price + ";" + quantity,imgURL);
             } );
         }
-        skus.entries().forEach(HttpClientPuller::accept);
+        skus.entries().forEach(HttpClientProductPuller::accept);
 
         AlibabaProductInfoPo productInfoPo = new AlibabaProductInfoPo();
         // 入库产品

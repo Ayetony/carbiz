@@ -9,7 +9,7 @@ import com.mp.generator.mapper.AlibabaProductInfoPoMapper;
 import com.mp.generator.mapper.ProductInfoMapper;
 import com.mp.generator.mapper.ProductInfoSyncMapper;
 import com.mp.generator.utils.Extractor;
-import com.mp.generator.utils.HttpClientPuller;
+import com.mp.generator.utils.HttpClientProductPuller;
 import com.mp.generator.utils.UrlParse;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -184,7 +184,7 @@ public class ProductSyncTableTask {
 
     //单条正式入库
     public boolean normalBaseImport(ProductInfoSync sync) {
-        Map<AlibabaProductInfoPo, Multimap<String, String>> map = new HttpClientPuller().productInfoFromJson(sync.getProductId());//533816674053 614252193570
+        Map<AlibabaProductInfoPo, Multimap<String, String>> map = new HttpClientProductPuller().productInfoFromJson(sync.getProductId());//533816674053 614252193570
         if (map == null) {
             return false;
         }

@@ -5,7 +5,7 @@ import com.google.common.collect.Multimap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mp.generator.entity.AlibabaProductInfoPo;
-import com.mp.generator.utils.HttpClientPuller;
+import com.mp.generator.utils.HttpClientProductPuller;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -44,7 +44,7 @@ public class ProductInfoController {
               return;
           }
         //HttpClientPuller.getJsonByGetRequest(queryId)
-        HttpClientPuller puller = new HttpClientPuller();
+        HttpClientProductPuller puller = new HttpClientProductPuller();
         Map.Entry<AlibabaProductInfoPo, Multimap<String,String>> map =  puller.productInfoFromJson(queryId).entrySet().iterator().next();
 
         Gson gson = new GsonBuilder().enableComplexMapKeySerialization().create();

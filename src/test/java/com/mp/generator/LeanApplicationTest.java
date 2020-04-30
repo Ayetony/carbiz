@@ -11,7 +11,7 @@ import com.mp.generator.mapper.AlibabaProductInfoPoMapper;
 import com.mp.generator.mapper.ProductInfoMapper;
 import com.mp.generator.mapper.ProductInfoSyncMapper;
 import com.mp.generator.utils.Extractor;
-import com.mp.generator.utils.HttpClientPuller;
+import com.mp.generator.utils.HttpClientProductPuller;
 import com.mp.generator.utils.UrlParse;
 import org.apache.commons.lang.StringUtils;
 import org.junit.jupiter.api.Test;
@@ -92,15 +92,15 @@ class LearnApplicationTest {
         System.out.println("入库成功：" + count);
     }
 
-    public void updateSync(ProductInfoSync sync){
+    public void updateSync(ProductInfoSync sync) {
         LambdaUpdateWrapper<ProductInfoSync> updateWrapper = new UpdateWrapper<ProductInfoSync>().lambda();
         updateWrapper
                 .set(ProductInfoSync::getUpdateTimes, sync.getUpdateTimes())
-                .set(ProductInfoSync::getShopName,sync.getShopName())
-                .set(ProductInfoSync::getCurrentPrice,sync.getCurrentPrice())
-                .set(ProductInfoSync::getTotalSaleThisMonth,sync.getTotalSaleThisMonth())
-                .eq(ProductInfoSync::getProductId,sync.getProductId());
-        productInfoSyncMapper.update(null,updateWrapper);
+                .set(ProductInfoSync::getShopName, sync.getShopName())
+                .set(ProductInfoSync::getCurrentPrice, sync.getCurrentPrice())
+                .set(ProductInfoSync::getTotalSaleThisMonth, sync.getTotalSaleThisMonth())
+                .eq(ProductInfoSync::getProductId, sync.getProductId());
+        productInfoSyncMapper.update(null, updateWrapper);
     }
 
 
@@ -147,7 +147,7 @@ class LearnApplicationTest {
 
     @Test
     public void testTrimColons() {
-        HttpClientPuller.trimColons("1:4:尺码:XXXL 100公分");
+        HttpClientProductPuller.trimColons("1:4:尺码:XXXL 100公分");
     }
 
     //分类浙江
@@ -213,22 +213,25 @@ class LearnApplicationTest {
     @Test
     public void AliProductProduce() {
         AtomicInteger count = new AtomicInteger();
-        List<ProductInfoSync> productInfoSyncList = productInfoSyncMapper.selectList(new QueryWrapper<ProductInfoSync>().like("keyword", "浙江")
+        List<ProductInfoSync> productInfoSyncList = productInfoSyncMapper.selectList(new QueryWrapper<ProductInfoSync>().like("keyword", "广东")
                 .isNotNull(true, "parent").and(Wrapper -> Wrapper.isNotNull(true, "child")));
         for (ProductInfoSync sync : productInfoSyncList) {
             try {
                 if (!isSkuSkip(sync) && !isExist(sync)) {//不存在于生产数据表，而且is_skip不为1
-                    if(!normalBaseImport(sync)){//api导入
+
+                    count.incrementAndGet();
+                    System.out.println("posting requests : " + count);
+                    if (count.intValue() > 10001) {
+                        System.exit(1);
+                    }
+
+                    if (!normalBaseImport(sync)) {//api导入
                         int tag = tagSkip(sync);
                         System.out.println("request missing:" + sync.getProductId() + ";tagging skip qty:" + tag);
                         continue;
                     }
-                    count.incrementAndGet();
-                    if (count.intValue() > 10000) {
-                        System.exit(1);
-                    }
                 }
-                System.out.println("SKip existing product id :" + sync.getProductId());
+                System.out.println("SKip existing sku product id :" + sync.getProductId());
             } catch (Exception e) {
                 e.printStackTrace();
                 throw new RuntimeException("异常id" + sync.getProductId());
@@ -238,37 +241,34 @@ class LearnApplicationTest {
 
     //给产品同步表打标签test
     @Test
-    public void tagSkipTest(){
+    public void tagSkipTest() {
         ProductInfoSync sync = new ProductInfoSync();
         sync.setIsSkip(1);
         sync.setProductId("1165850125");
         LambdaUpdateWrapper<ProductInfoSync> updateWrapper = new UpdateWrapper<ProductInfoSync>().lambda();
         updateWrapper
-                .set(ProductInfoSync::getIsSkip,1)
-                .eq(ProductInfoSync::getProductId,sync.getProductId());
-        int  result = productInfoSyncMapper.update(null,updateWrapper);
+                .set(ProductInfoSync::getIsSkip, 1)
+                .eq(ProductInfoSync::getProductId, sync.getProductId());
+        int result = productInfoSyncMapper.update(null, updateWrapper);
         System.out.println(result);
     }
 
 
-    public int tagSkip(ProductInfoSync sync){
-
+    public int tagSkip(ProductInfoSync sync) {
         // updateWrapper 更新指定的字段
         sync.setIsSkip(1);
         sync.setProductId("1165850125");
         LambdaUpdateWrapper<ProductInfoSync> updateWrapper = new UpdateWrapper<ProductInfoSync>().lambda();
         updateWrapper
-                .set(ProductInfoSync::getIsSkip,1)
-                .eq(ProductInfoSync::getProductId,sync.getProductId());
-        int  result = productInfoSyncMapper.update(null,updateWrapper);
+                .set(ProductInfoSync::getIsSkip, 1)
+                .eq(ProductInfoSync::getProductId, sync.getProductId());
+        int result = productInfoSyncMapper.update(null, updateWrapper);
         return result;
-
     }
 
 
-
     //判断是否跳过不存在sku的
-    public boolean isSkuSkip(ProductInfoSync sync){
+    public boolean isSkuSkip(ProductInfoSync sync) {
         return sync.getIsSkip() == 1;
     }
 
@@ -288,15 +288,15 @@ class LearnApplicationTest {
 
     // 主键重复
     @Test
-    public void testDuplicate(){
+    public void testDuplicate() {
         ProductInfoSync sync = new ProductInfoSync();
         sync.setProductId("554203983307");
     }
 
 
     public boolean normalBaseImport(ProductInfoSync sync) {
-        Map<AlibabaProductInfoPo, Multimap<String, String>> map = new HttpClientPuller().productInfoFromJson(sync.getProductId());//533816674053 614252193570
-        if(map == null){
+        Map<AlibabaProductInfoPo, Multimap<String, String>> map = new HttpClientProductPuller().productInfoFromJson(sync.getProductId());//533816674053 614252193570
+        if (map == null) {
             return false;
         }
         Map.Entry<AlibabaProductInfoPo, Multimap<String, String>> entry = map.entrySet().iterator().next();
@@ -314,6 +314,8 @@ class LearnApplicationTest {
             alibabaProductInfoPo.setParentCatalog(sync.getParent());
             alibabaProductInfoPo.setChildCatalog(sync.getChild());
             alibabaProductInfoPo.setKeyword(sync.getKeyword());
+            alibabaProductInfoPo.setCrawlId(1);
+            alibabaProductInfoPo.setCrawlLink("https://fuzhuang.1688.com/");
             alibabaProductInfoPoMapper.insert(alibabaProductInfoPo);
             count.incrementAndGet();
             System.out.println("正式入库：count" + count);
