@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Created-By: IntelliJ IDEA
+Built-By: Administrator
+Build-Jdk: 1.8.0_65
+Implementation-Title: carbiz
+Implementation-Version: 0.0.1
+Implementation-Vendor-Id: com.carbiz.service
+Main-Class: ${start-class}
+

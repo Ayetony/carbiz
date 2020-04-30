@@ -1,0 +1,7 @@
+2020-05-01  INFO 14168 --- [main] com.mp.generator.LearnApplicationTest    : Starting LearnApplicationTest on SW3N3RNA8KLUGMO with PID 14168 (started by Administrator in D:\carbiz)
+2020-05-01  INFO 14168 --- [main] com.mp.generator.LearnApplicationTest    : No active profile set, falling back to default profiles: default
+2020-05-01  WARN 14168 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.ProductInfo.
+2020-05-01  WARN 14168 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.ProductInfoSync.
+2020-05-01  INFO 14168 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-05-01  INFO 14168 --- [main] o.s.s.c.ThreadPoolTaskScheduler          : Initializing ExecutorService 'taskScheduler'
+2020-05-01  INFO 14168 --- [main] com.mp.generator.LearnApplicationTest    : Started LearnApplicationTest in 4.766 seconds (JVM running for 6.244)
