@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.google.common.collect.Multimap;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.mp.generator.entity.AlibabaProductInfoPo;
 import com.mp.generator.entity.ProductInfo;
 import com.mp.generator.entity.ProductInfoSync;
@@ -12,6 +14,7 @@ import com.mp.generator.mapper.ProductInfoMapper;
 import com.mp.generator.mapper.ProductInfoSyncMapper;
 import com.mp.generator.utils.Extractor;
 import com.mp.generator.utils.HttpClientProductPuller;
+import com.mp.generator.utils.JsonType;
 import com.mp.generator.utils.UrlParse;
 import org.apache.commons.lang.StringUtils;
 import org.junit.jupiter.api.Test;
@@ -329,6 +332,20 @@ class LearnApplicationTest {
     public void testSplit() {
         String test = "颜色:粉底白点";
         System.out.println(test.split(";")[0]);
+    }
+
+    @Test
+    public void testMultiMap(){
+        HttpClientProductPuller puller = new HttpClientProductPuller();
+        Map.Entry<AlibabaProductInfoPo, Multimap<String,String>> map =  puller.productInfoFromJson("581861251157").entrySet().iterator().next();
+
+        Gson gson = new GsonBuilder().enableComplexMapKeySerialization().create();
+        AlibabaProductInfoPo alibabaProductInfoPo = map.getKey();
+        JsonType type = new JsonType();
+        type.setAlibabaProductInfoPo(alibabaProductInfoPo);
+        type.setSkus(map.getValue().asMap());
+
+        System.out.println(gson.toJson(type));
     }
 
 

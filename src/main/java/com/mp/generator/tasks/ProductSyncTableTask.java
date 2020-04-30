@@ -1,6 +1,8 @@
 package com.mp.generator.tasks;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.google.common.collect.Multimap;
 import com.mp.generator.entity.AlibabaProductInfoPo;
 import com.mp.generator.entity.ProductInfo;
@@ -35,7 +37,8 @@ public class ProductSyncTableTask {
     @Autowired
     AlibabaProductInfoPoMapper alibabaProductInfoPoMapper;
 
-    //    @Scheduled(fixedRate = 1000*60*60*4)
+//    @Scheduled(fixedRate = 1000*60*60*4)
+    @Scheduled(cron = "0 0 7,12,22 * * ?")
     private void syncOcptusProductInfoTask() {
         //删除 product_info dj 临时链接
         int delDj = productInfoMapper.delete(new QueryWrapper<ProductInfo>().like("product_ref", "dj"));
@@ -68,12 +71,14 @@ public class ProductSyncTableTask {
             sync.setShopId(productInfo.getShopId());
             sync.setProductRef(productInfo.getProductRef());
             sync.setShopRef(productInfo.getShopRef());
-            ProductInfoSync syncQuery = productInfoSyncMapper.selectById(productInfo.getProductId());
+            ProductInfoSync syncQuery = productInfoSyncMapper
+                    .selectOne(new QueryWrapper<ProductInfoSync>().lambda().eq(ProductInfoSync::getProductId, productInfo.getProductId()));
             if (syncQuery != null) {
                 String message = diff(syncQuery, sync);
                 if (StringUtils.isNotBlank(message)) {
                     sync.setUpdateTimes(syncQuery.getUpdateTimes() + 1);
-                    productInfoSyncMapper.updateById(sync);
+//                    productInfoSyncMapper.updateById(sync);
+                    updateSync(sync);
                     System.out.println("update id=" + sync.getProductId() + ",更新:" + message + " ;updateCount" + updateCount.getAndIncrement());
                 }
             } else {
@@ -83,9 +88,10 @@ public class ProductSyncTableTask {
             }
         });
         System.out.println("入库成功：" + count);
+
     }
 
-    @Scheduled(cron = "0 0 7,12,22 * * ?")
+//    @Scheduled(cron = "0 0 7,12,22 * * ?")
     private void classifyTask() {
         classifyZJprovince();
     }
@@ -216,6 +222,17 @@ public class ProductSyncTableTask {
         Integer count = alibabaProductInfoPoMapper.selectCount(new QueryWrapper<AlibabaProductInfoPo>().eq("product_i_d_in_source_site", sync.getProductId()));
         return count > 0;
 
+    }
+
+    public void updateSync(ProductInfoSync sync) {
+        LambdaUpdateWrapper<ProductInfoSync> updateWrapper = new UpdateWrapper<ProductInfoSync>().lambda();
+        updateWrapper
+                .set(ProductInfoSync::getUpdateTimes, sync.getUpdateTimes())
+                .set(ProductInfoSync::getShopName, sync.getShopName())
+                .set(ProductInfoSync::getCurrentPrice, sync.getCurrentPrice())
+                .set(ProductInfoSync::getTotalSaleThisMonth, sync.getTotalSaleThisMonth())
+                .eq(ProductInfoSync::getProductId, sync.getProductId());
+        productInfoSyncMapper.update(null, updateWrapper);
     }
 
 

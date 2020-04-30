@@ -6,9 +6,11 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mp.generator.entity.AlibabaProductInfoPo;
 import com.mp.generator.utils.HttpClientProductPuller;
+import com.mp.generator.utils.JsonType;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.ServletException;
@@ -37,7 +39,6 @@ public class ProductInfoController {
               request.getRequestDispatcher(request.getContextPath() + "/" + "index.jsp").forward(request,response);
               return;
           }
-
           if(queryId.length()>20){
               request.setAttribute("message","id error long");
               request.getRequestDispatcher(  request.getContextPath() + "/" + "index.jsp").forward(request,response);
@@ -45,17 +46,41 @@ public class ProductInfoController {
           }
         //HttpClientPuller.getJsonByGetRequest(queryId)
         HttpClientProductPuller puller = new HttpClientProductPuller();
-        Map.Entry<AlibabaProductInfoPo, Multimap<String,String>> map =  puller.productInfoFromJson(queryId).entrySet().iterator().next();
+        Map.Entry<AlibabaProductInfoPo, Multimap<String,String>> map =  puller.productInfoFromJson("581861251157").entrySet().iterator().next();
 
         Gson gson = new GsonBuilder().enableComplexMapKeySerialization().create();
-        String pro = gson.toJson(map.getKey());
-        String mul = gson.toJson(map.getValue());
+        AlibabaProductInfoPo alibabaProductInfoPo = map.getKey();
+        JsonType type = new JsonType();
+        type.setAlibabaProductInfoPo(alibabaProductInfoPo);
+        type.setSkus(map.getValue().asMap());
 
-        request.setAttribute("message",gson.toJson(pro+mul));
+        request.setAttribute("message",gson.toJson(type));
         request.getRequestDispatcher(request.getContextPath() + "/" + "index.jsp").forward(request,response);
     }
 
+    @RequestMapping(value="/query_pro", method= RequestMethod.POST)
+    public String queryAlibabaProductInfoId(@RequestParam("alibaba_product_id") String productId){
+        //HttpClientPuller.getJsonByGetRequest(queryId)
+        if(StringUtils.isBlank(productId)){
+            return "Error ID";
+        }
+        HttpClientProductPuller puller = new HttpClientProductPuller();
+        Map<AlibabaProductInfoPo,Multimap<String,String>> httpClientMap = puller.productInfoFromJson(productId);
 
+        if(httpClientMap == null){
+            return "not exist";
+        }
+        Map.Entry<AlibabaProductInfoPo, Multimap<String,String>> map =  httpClientMap.entrySet().iterator().next();
+        if(map == null){
+            return "missing request";
+        }
+        Gson gson = new GsonBuilder().enableComplexMapKeySerialization().create();
+        AlibabaProductInfoPo alibabaProductInfoPo = map.getKey();
+        JsonType type = new JsonType();
+        type.setAlibabaProductInfoPo(alibabaProductInfoPo);
+        type.setSkus(map.getValue().asMap());
+        return gson.toJson(type);
+    }
 
 
 }
