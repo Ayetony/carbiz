@@ -38,7 +38,7 @@ public class ProductSyncTableTask {
     AlibabaProductInfoPoMapper alibabaProductInfoPoMapper;
 
 //    @Scheduled(fixedRate = 1000*60*60*4)
-    @Scheduled(cron = "0 0 7,12,22 * * ?")
+//    @Scheduled(cron = "0 0 4,12,22 * * ?")
     private void syncOcptusProductInfoTask() {
         //删除 product_info dj 临时链接
         int delDj = productInfoMapper.delete(new QueryWrapper<ProductInfo>().like("product_ref", "dj"));

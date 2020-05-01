@@ -19,9 +19,15 @@ public class UrlParse {
             return "";
     }
 
-    public static void mainDemo(String[] args) {
+    public static String shopRefToSellerNick(String shopRef){
+        return StringUtils.substringBetween(shopRef,"https://",".1688.com/");
+    }
+
+
+    public static void main(String[] args) {
         System.out.println(productRefToId("https://detail.1688.com/offer/615318815095.html"));
         System.out.println(shopRefToId("http://shop1468429237850.1688.com/"));
+        System.out.println(shopRefToSellerNick("https://shop1432227742608.1688.com/"));
     }
 
 }

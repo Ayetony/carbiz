@@ -82,9 +82,10 @@ class LearnApplicationTest {
                 String message = diff(syncQuery, sync);
                 if (StringUtils.isNotBlank(message)) {
                     sync.setUpdateTimes(syncQuery.getUpdateTimes() + 1);
-//                    productInfoSyncMapper.updateById(sync);
                     updateSync(sync);
                     System.out.println("update id=" + sync.getProductId() + ",更新:" + message + " ;updateCount" + updateCount.getAndIncrement());
+                }else{
+                    System.out.println("No need update ,equal id=" + sync.getProductId());
                 }
             } else {
                 productInfoSyncMapper.insert(sync);
@@ -102,6 +103,7 @@ class LearnApplicationTest {
                 .set(ProductInfoSync::getShopName, sync.getShopName())
                 .set(ProductInfoSync::getCurrentPrice, sync.getCurrentPrice())
                 .set(ProductInfoSync::getTotalSaleThisMonth, sync.getTotalSaleThisMonth())
+                .set(ProductInfoSync::getKeyword,sync.getKeyword())
                 .eq(ProductInfoSync::getProductId, sync.getProductId());
         productInfoSyncMapper.update(null, updateWrapper);
     }
@@ -134,6 +136,10 @@ class LearnApplicationTest {
 
         if (old.getTotalSaleThisMonth().intValue() != sync.getTotalSaleThisMonth().intValue()) {
             message += "Old-TotalSaleThisMonth:" + old.getTotalSaleThisMonth() + "; New-TotalSaleThisMonth:" + sync.getTotalSaleThisMonth();
+        }
+
+        if(!old.getKeyword().equals(sync.getKeyword())){
+            message += "Old-keyword:" + old.getKeyword() + "; New-keyword:" + sync.getKeyword();
         }
 
         return message;
