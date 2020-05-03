@@ -1,126 +1,90 @@
-2020-05-03  WARN 4972 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.ProductInfo.
-2020-05-03  WARN 4972 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.ProductInfoSync.
-2020-05-03  WARN 4972 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.SupplierInfoSync.
-2020-05-03  INFO 4972 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
-2020-05-03  INFO 4972 --- [main] o.s.s.c.ThreadPoolTaskScheduler          : Initializing ExecutorService 'taskScheduler'
-2020-05-03  INFO 4972 --- [main] com.mp.generator.ExecuteDbTask           : Started ExecuteDbTask in 8.593 seconds (JVM running for 11.637)
-2020-05-03  INFO 4972 --- [main] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} inited
-2020-05-03  INFO 2788 --- [main] com.mp.generator.LearnApplicationTest    : Starting LearnApplicationTest on SW3N3RNA8KLUGMO with PID 2788 (started by Administrator in D:\carbiz)
-2020-05-03  INFO 2788 --- [main] com.mp.generator.LearnApplicationTest    : No active profile set, falling back to default profiles: default
-2020-05-03  WARN 2788 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.ProductInfo.
-2020-05-03  WARN 2788 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.ProductInfoSync.
-2020-05-03  WARN 2788 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.SupplierInfoSync.
-2020-05-03  INFO 2788 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
-2020-05-03  INFO 2788 --- [main] o.s.s.c.ThreadPoolTaskScheduler          : Initializing ExecutorService 'taskScheduler'
-2020-05-03  INFO 2788 --- [main] com.mp.generator.LearnApplicationTest    : Started LearnApplicationTest in 9.027 seconds (JVM running for 12.922)
-2020-05-03  INFO 2788 --- [main] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} inited
-2020-05-03  INFO 2788 --- [SpringContextShutdownHook] o.s.s.c.ThreadPoolTaskScheduler          : Shutting down ExecutorService 'taskScheduler'
-2020-05-03  INFO 2788 --- [SpringContextShutdownHook] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
-2020-05-03  INFO 2788 --- [SpringContextShutdownHook] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} closing ...
-2020-05-03  INFO 2788 --- [SpringContextShutdownHook] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} closed
-2020-05-03  INFO 6492 --- [main] com.mp.generator.LearnApplicationTest    : Starting LearnApplicationTest on SW3N3RNA8KLUGMO with PID 6492 (started by Administrator in D:\carbiz)
-2020-05-03  INFO 6492 --- [main] com.mp.generator.LearnApplicationTest    : No active profile set, falling back to default profiles: default
-2020-05-03  WARN 6492 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.ProductInfo.
-2020-05-03  WARN 6492 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.ProductInfoSync.
-2020-05-03  WARN 6492 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.SupplierInfoSync.
-2020-05-03  INFO 6492 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
-2020-05-03  INFO 6492 --- [main] o.s.s.c.ThreadPoolTaskScheduler          : Initializing ExecutorService 'taskScheduler'
-2020-05-03  INFO 6492 --- [main] com.mp.generator.LearnApplicationTest    : Started LearnApplicationTest in 9.848 seconds (JVM running for 12.788)
-2020-05-03  INFO 6492 --- [main] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} inited
-2020-05-03  INFO 3912 --- [main] com.mp.generator.LearnApplicationTest    : Starting LearnApplicationTest on SW3N3RNA8KLUGMO with PID 3912 (started by Administrator in D:\carbiz)
-2020-05-03  INFO 3912 --- [main] com.mp.generator.LearnApplicationTest    : No active profile set, falling back to default profiles: default
-2020-05-03  WARN 3912 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.ProductInfo.
-2020-05-03  WARN 3912 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.ProductInfoSync.
-2020-05-03  WARN 3912 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.SupplierInfoSync.
-2020-05-03  INFO 3912 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
-2020-05-03  INFO 3912 --- [main] o.s.s.c.ThreadPoolTaskScheduler          : Initializing ExecutorService 'taskScheduler'
-2020-05-03  INFO 3912 --- [main] com.mp.generator.LearnApplicationTest    : Started LearnApplicationTest in 4.279 seconds (JVM running for 5.806)
-2020-05-03  INFO 3912 --- [main] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} inited
-2020-05-03  INFO 11060 --- [main] com.mp.generator.LearnApplicationTest    : Starting LearnApplicationTest on SW3N3RNA8KLUGMO with PID 11060 (started by Administrator in D:\carbiz)
-2020-05-03  INFO 11060 --- [main] com.mp.generator.LearnApplicationTest    : No active profile set, falling back to default profiles: default
-2020-05-03  WARN 11060 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.ProductInfo.
-2020-05-03  WARN 11060 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.ProductInfoSync.
-2020-05-03  WARN 11060 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.SupplierInfoSync.
-2020-05-03  INFO 11060 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
-2020-05-03  INFO 11060 --- [main] o.s.s.c.ThreadPoolTaskScheduler          : Initializing ExecutorService 'taskScheduler'
-2020-05-03  INFO 11060 --- [main] com.mp.generator.LearnApplicationTest    : Started LearnApplicationTest in 4.149 seconds (JVM running for 6.231)
-2020-05-03  INFO 11060 --- [main] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} inited
-2020-05-03  INFO 10884 --- [main] com.mp.generator.LearnApplicationTest    : Starting LearnApplicationTest on SW3N3RNA8KLUGMO with PID 10884 (started by Administrator in D:\carbiz)
-2020-05-03  INFO 10884 --- [main] com.mp.generator.LearnApplicationTest    : No active profile set, falling back to default profiles: default
-2020-05-03  WARN 10884 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.ProductInfo.
-2020-05-03  WARN 10884 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.ProductInfoSync.
-2020-05-03  WARN 10884 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.SupplierInfoSync.
-2020-05-03  INFO 10884 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
-2020-05-03  INFO 10884 --- [main] o.s.s.c.ThreadPoolTaskScheduler          : Initializing ExecutorService 'taskScheduler'
-2020-05-03  INFO 10884 --- [main] com.mp.generator.LearnApplicationTest    : Started LearnApplicationTest in 4.644 seconds (JVM running for 5.868)
-2020-05-03  INFO 10884 --- [main] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} inited
-2020-05-03  INFO 10884 --- [SpringContextShutdownHook] o.s.s.c.ThreadPoolTaskScheduler          : Shutting down ExecutorService 'taskScheduler'
-2020-05-03  INFO 10884 --- [SpringContextShutdownHook] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
-2020-05-03  INFO 10884 --- [SpringContextShutdownHook] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} closing ...
-2020-05-03  INFO 10884 --- [SpringContextShutdownHook] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} closed
-2020-05-03  INFO 2184 --- [main] com.mp.generator.LearnApplicationTest    : Starting LearnApplicationTest on SW3N3RNA8KLUGMO with PID 2184 (started by Administrator in D:\carbiz)
-2020-05-03  INFO 2184 --- [main] com.mp.generator.LearnApplicationTest    : No active profile set, falling back to default profiles: default
-2020-05-03  WARN 2184 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.ProductInfo.
-2020-05-03  WARN 2184 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.ProductInfoSync.
-2020-05-03  WARN 2184 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.SupplierInfoSync.
-2020-05-03  INFO 2184 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
-2020-05-03  INFO 2184 --- [main] o.s.s.c.ThreadPoolTaskScheduler          : Initializing ExecutorService 'taskScheduler'
-2020-05-03  INFO 2184 --- [main] com.mp.generator.LearnApplicationTest    : Started LearnApplicationTest in 4.33 seconds (JVM running for 5.837)
-2020-05-03  INFO 2184 --- [main] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} inited
-2020-05-03  INFO 2184 --- [SpringContextShutdownHook] o.s.s.c.ThreadPoolTaskScheduler          : Shutting down ExecutorService 'taskScheduler'
-2020-05-03  INFO 2184 --- [SpringContextShutdownHook] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
-2020-05-03  INFO 2184 --- [SpringContextShutdownHook] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} closing ...
-2020-05-03  INFO 2184 --- [SpringContextShutdownHook] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} closed
-2020-05-03  INFO 1364 --- [main] com.mp.generator.LearnApplicationTest    : Starting LearnApplicationTest on SW3N3RNA8KLUGMO with PID 1364 (started by Administrator in D:\carbiz)
-2020-05-03  INFO 1364 --- [main] com.mp.generator.LearnApplicationTest    : No active profile set, falling back to default profiles: default
-2020-05-03  WARN 1364 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.ProductInfo.
-2020-05-03  WARN 1364 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.ProductInfoSync.
-2020-05-03  WARN 1364 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.SupplierInfoSync.
-2020-05-03  INFO 1364 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
-2020-05-03  INFO 1364 --- [main] o.s.s.c.ThreadPoolTaskScheduler          : Initializing ExecutorService 'taskScheduler'
-2020-05-03  INFO 1364 --- [main] com.mp.generator.LearnApplicationTest    : Started LearnApplicationTest in 4.08 seconds (JVM running for 5.49)
-2020-05-03  INFO 1364 --- [main] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} inited
-2020-05-03  INFO 1364 --- [SpringContextShutdownHook] o.s.s.c.ThreadPoolTaskScheduler          : Shutting down ExecutorService 'taskScheduler'
-2020-05-03  INFO 1364 --- [SpringContextShutdownHook] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
-2020-05-03  INFO 1364 --- [SpringContextShutdownHook] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} closing ...
-2020-05-03  INFO 1364 --- [SpringContextShutdownHook] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} closed
-2020-05-03  INFO 11192 --- [main] com.mp.generator.LearnApplicationTest    : Starting LearnApplicationTest on SW3N3RNA8KLUGMO with PID 11192 (started by Administrator in D:\carbiz)
-2020-05-03  INFO 11192 --- [main] com.mp.generator.LearnApplicationTest    : No active profile set, falling back to default profiles: default
-2020-05-03  WARN 11192 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.ProductInfo.
-2020-05-03  WARN 11192 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.ProductInfoSync.
-2020-05-03  WARN 11192 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.SupplierInfoSync.
-2020-05-03  INFO 11192 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
-2020-05-03  INFO 11192 --- [main] o.s.s.c.ThreadPoolTaskScheduler          : Initializing ExecutorService 'taskScheduler'
-2020-05-03  INFO 11192 --- [main] com.mp.generator.LearnApplicationTest    : Started LearnApplicationTest in 3.921 seconds (JVM running for 5.449)
-2020-05-03  INFO 11192 --- [main] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} inited
-2020-05-03  INFO 11192 --- [SpringContextShutdownHook] o.s.s.c.ThreadPoolTaskScheduler          : Shutting down ExecutorService 'taskScheduler'
-2020-05-03  INFO 11192 --- [SpringContextShutdownHook] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
-2020-05-03  INFO 11192 --- [SpringContextShutdownHook] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} closing ...
-2020-05-03  INFO 11192 --- [SpringContextShutdownHook] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} closed
-2020-05-03  INFO 8816 --- [main] com.mp.generator.LearnApplicationTest    : Starting LearnApplicationTest on SW3N3RNA8KLUGMO with PID 8816 (started by Administrator in D:\carbiz)
-2020-05-03  INFO 8816 --- [main] com.mp.generator.LearnApplicationTest    : No active profile set, falling back to default profiles: default
 2020-05-03  WARN 8816 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.ProductInfo.
 2020-05-03  WARN 8816 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.ProductInfoSync.
 2020-05-03  WARN 8816 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.SupplierInfoSync.
 2020-05-03  INFO 8816 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
 2020-05-03  INFO 8816 --- [main] o.s.s.c.ThreadPoolTaskScheduler          : Initializing ExecutorService 'taskScheduler'
-2020-05-03  INFO 8816 --- [main] com.mp.generator.LearnApplicationTest    : Started LearnApplicationTest in 4.364 seconds (JVM running for 5.863)
+2020-05-03  INFO 8816 --- [main] com.mp.generator.ExecuteDbTask           : Started ExecuteDbTask in 4.779 seconds (JVM running for 6.027)
 2020-05-03  INFO 8816 --- [main] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} inited
-2020-05-03  INFO 976 --- [main] com.mp.generator.LearnApplicationTest    : Starting LearnApplicationTest on SW3N3RNA8KLUGMO with PID 976 (started by Administrator in D:\carbiz)
-2020-05-03  INFO 976 --- [main] com.mp.generator.LearnApplicationTest    : No active profile set, falling back to default profiles: default
-2020-05-03  WARN 976 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.ProductInfo.
-2020-05-03  WARN 976 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.ProductInfoSync.
-2020-05-03  WARN 976 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.SupplierInfoSync.
-2020-05-03  INFO 976 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
-2020-05-03  INFO 976 --- [main] o.s.s.c.ThreadPoolTaskScheduler          : Initializing ExecutorService 'taskScheduler'
-2020-05-03  INFO 976 --- [main] com.mp.generator.LearnApplicationTest    : Started LearnApplicationTest in 4.261 seconds (JVM running for 5.821)
-2020-05-03  INFO 976 --- [main] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} inited
-2020-05-03  INFO 5012 --- [main] com.mp.generator.LearnApplicationTest    : Starting LearnApplicationTest on SW3N3RNA8KLUGMO with PID 5012 (started by Administrator in D:\carbiz)
-2020-05-03  INFO 5012 --- [main] com.mp.generator.LearnApplicationTest    : No active profile set, falling back to default profiles: default
-2020-05-03  WARN 5012 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.ProductInfo.
-2020-05-03  WARN 5012 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.ProductInfoSync.
-2020-05-03  WARN 5012 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.SupplierInfoSync.
-2020-05-03  INFO 5012 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
-2020-05-03  INFO 5012 --- [main] o.s.s.c.ThreadPoolTaskScheduler          : Initializing ExecutorService 'taskScheduler'
-2020-05-03  INFO 5012 --- [main] com.mp.generator.LearnApplicationTest    : Started LearnApplicationTest in 4.047 seconds (JVM running for 5.357)
-2020-05-03  INFO 5012 --- [main] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} inited
+2020-05-03  INFO 3948 --- [main] com.mp.generator.ExecuteDbTask           : Starting ExecuteDbTask on SW3N3RNA8KLUGMO with PID 3948 (started by Administrator in D:\carbiz)
+2020-05-03  INFO 3948 --- [main] com.mp.generator.ExecuteDbTask           : No active profile set, falling back to default profiles: default
+2020-05-03  WARN 3948 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.ProductInfo.
+2020-05-03  WARN 3948 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.ProductInfoSync.
+2020-05-03  WARN 3948 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.SupplierInfoSync.
+2020-05-03  INFO 3948 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-05-03  INFO 3948 --- [main] o.s.s.c.ThreadPoolTaskScheduler          : Initializing ExecutorService 'taskScheduler'
+2020-05-03  INFO 3948 --- [main] com.mp.generator.ExecuteDbTask           : Started ExecuteDbTask in 4.761 seconds (JVM running for 5.893)
+2020-05-03  INFO 3948 --- [main] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} inited
+2020-05-03  INFO 3948 --- [SpringContextShutdownHook] o.s.s.c.ThreadPoolTaskScheduler          : Shutting down ExecutorService 'taskScheduler'
+2020-05-03  INFO 3948 --- [SpringContextShutdownHook] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2020-05-03  INFO 3948 --- [SpringContextShutdownHook] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} closing ...
+2020-05-03  INFO 3948 --- [SpringContextShutdownHook] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} closed
+2020-05-03  INFO 128 --- [main] com.mp.generator.ExecuteDbTask           : Starting ExecuteDbTask on SW3N3RNA8KLUGMO with PID 128 (started by Administrator in D:\carbiz)
+2020-05-03  INFO 128 --- [main] com.mp.generator.ExecuteDbTask           : No active profile set, falling back to default profiles: default
+2020-05-03  WARN 128 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.ProductInfo.
+2020-05-03  WARN 128 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.ProductInfoSync.
+2020-05-03  WARN 128 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.SupplierInfoSync.
+2020-05-03  INFO 128 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-05-03  INFO 128 --- [main] o.s.s.c.ThreadPoolTaskScheduler          : Initializing ExecutorService 'taskScheduler'
+2020-05-03  INFO 128 --- [main] com.mp.generator.ExecuteDbTask           : Started ExecuteDbTask in 5.117 seconds (JVM running for 6.261)
+2020-05-03  INFO 128 --- [main] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} inited
+2020-05-03  INFO 128 --- [SpringContextShutdownHook] o.s.s.c.ThreadPoolTaskScheduler          : Shutting down ExecutorService 'taskScheduler'
+2020-05-03  INFO 128 --- [SpringContextShutdownHook] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2020-05-03  INFO 128 --- [SpringContextShutdownHook] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} closing ...
+2020-05-03  INFO 128 --- [SpringContextShutdownHook] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} closed
+2020-05-03  INFO 11012 --- [main] com.mp.generator.ExecuteDbTask           : Starting ExecuteDbTask on SW3N3RNA8KLUGMO with PID 11012 (started by Administrator in D:\carbiz)
+2020-05-03  INFO 11012 --- [main] com.mp.generator.ExecuteDbTask           : No active profile set, falling back to default profiles: default
+2020-05-03  WARN 11012 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.ProductInfo.
+2020-05-03  WARN 11012 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.ProductInfoSync.
+2020-05-03  WARN 11012 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.SupplierInfoSync.
+2020-05-03  INFO 11012 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-05-03  INFO 11012 --- [main] o.s.s.c.ThreadPoolTaskScheduler          : Initializing ExecutorService 'taskScheduler'
+2020-05-03  INFO 11012 --- [main] com.mp.generator.ExecuteDbTask           : Started ExecuteDbTask in 5.244 seconds (JVM running for 6.378)
+2020-05-03  INFO 11012 --- [main] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} inited
+2020-05-03  INFO 11012 --- [SpringContextShutdownHook] o.s.s.c.ThreadPoolTaskScheduler          : Shutting down ExecutorService 'taskScheduler'
+2020-05-03  INFO 11012 --- [SpringContextShutdownHook] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2020-05-03  INFO 11012 --- [SpringContextShutdownHook] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} closing ...
+2020-05-03  INFO 11012 --- [SpringContextShutdownHook] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} closed
+2020-05-03  INFO 9892 --- [main] com.mp.generator.ExecuteDbTask           : Starting ExecuteDbTask on SW3N3RNA8KLUGMO with PID 9892 (started by Administrator in D:\carbiz)
+2020-05-03  INFO 9892 --- [main] com.mp.generator.ExecuteDbTask           : No active profile set, falling back to default profiles: default
+2020-05-03  WARN 9892 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.ProductInfo.
+2020-05-03  WARN 9892 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.ProductInfoSync.
+2020-05-03  WARN 9892 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.SupplierInfoSync.
+2020-05-03  INFO 9892 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-05-03  INFO 9892 --- [main] o.s.s.c.ThreadPoolTaskScheduler          : Initializing ExecutorService 'taskScheduler'
+2020-05-03  INFO 9892 --- [main] com.mp.generator.ExecuteDbTask           : Started ExecuteDbTask in 4.605 seconds (JVM running for 5.731)
+2020-05-03  INFO 9892 --- [main] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} inited
+2020-05-03  INFO 9892 --- [SpringContextShutdownHook] o.s.s.c.ThreadPoolTaskScheduler          : Shutting down ExecutorService 'taskScheduler'
+2020-05-03  INFO 9892 --- [SpringContextShutdownHook] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2020-05-03  INFO 9892 --- [SpringContextShutdownHook] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} closing ...
+2020-05-03  INFO 9892 --- [SpringContextShutdownHook] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} closed
+2020-05-03  INFO 3720 --- [main] com.mp.generator.ExecuteDbTask           : Starting ExecuteDbTask on SW3N3RNA8KLUGMO with PID 3720 (started by Administrator in D:\carbiz)
+2020-05-03  INFO 3720 --- [main] com.mp.generator.ExecuteDbTask           : No active profile set, falling back to default profiles: default
+2020-05-03  WARN 3720 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.ProductInfo.
+2020-05-03  WARN 3720 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.ProductInfoSync.
+2020-05-03  WARN 3720 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.SupplierInfoSync.
+2020-05-03  INFO 3720 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-05-03  INFO 3720 --- [main] o.s.s.c.ThreadPoolTaskScheduler          : Initializing ExecutorService 'taskScheduler'
+2020-05-03  INFO 3720 --- [main] com.mp.generator.ExecuteDbTask           : Started ExecuteDbTask in 5.512 seconds (JVM running for 6.691)
+2020-05-03  INFO 3720 --- [main] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} inited
+2020-05-03  INFO 3720 --- [SpringContextShutdownHook] o.s.s.c.ThreadPoolTaskScheduler          : Shutting down ExecutorService 'taskScheduler'
+2020-05-03  INFO 3720 --- [SpringContextShutdownHook] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2020-05-03  INFO 3720 --- [SpringContextShutdownHook] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} closing ...
+2020-05-03  INFO 3720 --- [SpringContextShutdownHook] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} closed
+2020-05-03  INFO 1592 --- [main] com.mp.generator.ExecuteDbTask           : Starting ExecuteDbTask on SW3N3RNA8KLUGMO with PID 1592 (started by Administrator in D:\carbiz)
+2020-05-03  INFO 1592 --- [main] com.mp.generator.ExecuteDbTask           : No active profile set, falling back to default profiles: default
+2020-05-03  WARN 1592 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.ProductInfo.
+2020-05-03  WARN 1592 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.ProductInfoSync.
+2020-05-03  WARN 1592 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.SupplierInfoSync.
+2020-05-03  INFO 1592 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-05-03  INFO 1592 --- [main] o.s.s.c.ThreadPoolTaskScheduler          : Initializing ExecutorService 'taskScheduler'
+2020-05-03  INFO 1592 --- [main] com.mp.generator.ExecuteDbTask           : Started ExecuteDbTask in 4.912 seconds (JVM running for 6.035)
+2020-05-03  INFO 1592 --- [main] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} inited
+2020-05-03  INFO 6668 --- [main] com.mp.generator.ExecuteDbTask           : Starting ExecuteDbTask on SW3N3RNA8KLUGMO with PID 6668 (started by Administrator in D:\carbiz)
+2020-05-03  INFO 6668 --- [main] com.mp.generator.ExecuteDbTask           : No active profile set, falling back to default profiles: default
+2020-05-03  WARN 6668 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.ProductInfo.
+2020-05-03  WARN 6668 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.ProductInfoSync.
+2020-05-03  WARN 6668 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.SupplierInfoSync.
+2020-05-03  INFO 6668 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-05-03  INFO 6668 --- [main] o.s.s.c.ThreadPoolTaskScheduler          : Initializing ExecutorService 'taskScheduler'
+2020-05-03  INFO 6668 --- [main] com.mp.generator.ExecuteDbTask           : Started ExecuteDbTask in 4.541 seconds (JVM running for 5.675)
+2020-05-03  INFO 6668 --- [main] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} inited

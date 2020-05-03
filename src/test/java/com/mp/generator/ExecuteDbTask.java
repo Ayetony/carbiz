@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.mp.generator.entity.AlibabaSupplierInfoPo;
 import com.mp.generator.entity.SupplierInfo;
 import com.mp.generator.entity.SupplierInfoSync;
-import com.mp.generator.mapper.AlibabaProductInfoPoMapper;
 import com.mp.generator.mapper.AlibabaSupplierInfoPoMapper;
 import com.mp.generator.mapper.SupplierInfoMapper;
 import com.mp.generator.mapper.SupplierInfoSyncMapper;
@@ -44,7 +43,7 @@ public class ExecuteDbTask {
     public void syncSupplierTableTest(){
 
         //删除dj
-        int delQty = supplierInfoMapper.delete(new QueryWrapper<SupplierInfo>().like("shop_ref", "dj").or().isNull("shop_ref"));
+        int delQty = supplierInfoMapper.delete(new QueryWrapper<SupplierInfo>().like("shop_ref", "dj").or().eq(true,"shop_ref",""));
         System.out.println("删除垃圾DJ链接数量 : " + delQty);
         //查询所有并去重
         System.out.println(" mysql base sync supplier method testing --------");
@@ -56,15 +55,9 @@ public class ExecuteDbTask {
         supplierInfos.forEach(supplierInfo -> {
             hashMap.put(supplierInfo.getShopRef(), supplierInfo);//不断载入，通过product_ref 就可以去重了
         });
-        List<SupplierInfo> supplierInfoList = supplierInfoMapper.selectList(null);
-        supplierInfoList.forEach( supplierInfo -> {
-            hashMap.put(supplierInfo.getShopRef(),supplierInfo);
-        });
-
         hashMap.forEach((key,supplierInfo) -> {
 
             System.out.println("Scan Db===>扫描数据行数:" + scanPosition.incrementAndGet());
-
             SupplierInfoSync sync = new SupplierInfoSync();
             sync.setShopRef(key);
             sync.setBusinessType(supplierInfo.getBusinessType());
@@ -86,6 +79,7 @@ public class ExecuteDbTask {
                     System.out.println("No need update ,equal id=" + sync.getShopRef());
                 }
             } else {
+                System.out.println(sync.getSellerNick()  +""+  sync.getShopRef());
                 supplierInfoSyncMapper.insert(sync);
                 count.getAndIncrement();
                 System.out.println("入库id:" + sync.getShopRef() + " count:" + count);
