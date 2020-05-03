@@ -46,7 +46,7 @@ public class ProductInfoController {
           }
         //HttpClientPuller.getJsonByGetRequest(queryId)
         HttpClientProductPuller puller = new HttpClientProductPuller();
-        Map.Entry<AlibabaProductInfoPo, Multimap<String,String>> map =  puller.productInfoFromJson("581861251157").entrySet().iterator().next();
+        Map.Entry<AlibabaProductInfoPo, Multimap<String,String>> map =  puller.productInfoFromJson(queryId).entrySet().iterator().next();
 
         Gson gson = new GsonBuilder().enableComplexMapKeySerialization().create();
         AlibabaProductInfoPo alibabaProductInfoPo = map.getKey();

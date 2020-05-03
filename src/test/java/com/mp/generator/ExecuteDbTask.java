@@ -3,10 +3,14 @@ package com.mp.generator;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.mp.generator.entity.AlibabaSupplierInfoPo;
 import com.mp.generator.entity.SupplierInfo;
 import com.mp.generator.entity.SupplierInfoSync;
+import com.mp.generator.mapper.AlibabaProductInfoPoMapper;
+import com.mp.generator.mapper.AlibabaSupplierInfoPoMapper;
 import com.mp.generator.mapper.SupplierInfoMapper;
 import com.mp.generator.mapper.SupplierInfoSyncMapper;
+import com.mp.generator.utils.HttpClientSupplierPuller;
 import com.mp.generator.utils.UrlParse;
 import org.apache.commons.lang.StringUtils;
 import org.junit.Test;
@@ -30,6 +34,9 @@ public class ExecuteDbTask {
 
     @Autowired
     SupplierInfoMapper supplierInfoMapper;
+
+    @Autowired
+    AlibabaSupplierInfoPoMapper alibabaSupplierInfoPoMap;
 
 
     //octopus sync supplier
@@ -64,7 +71,6 @@ public class ExecuteDbTask {
             sync.setCompanyName(supplierInfo.getCompanyName());
             sync.setKeyword(supplierInfo.getKeyword());
             sync.setMainProduct(supplierInfo.getMainProduct());
-//            System.out.println(UrlParse.shopRefToSellerNick(supplierInfo.getShopRef()) + supplierInfo.getShopRef());
             sync.setSellerNick(UrlParse.shopRefToSellerNick(supplierInfo.getShopRef()));
             sync.setShopLocation(supplierInfo.getShopLocation());
             sync.setTotalSold(supplierInfo.getTotalSold());
@@ -120,6 +126,56 @@ public class ExecuteDbTask {
         return message;
     }
 
+    @Test
+    public void aliBaseSupplierTest(){
+        AtomicInteger count = new AtomicInteger();
+        List<SupplierInfoSync> supplierInfoSyncList = supplierInfoSyncMapper.selectList(null);
+        for (SupplierInfoSync sync : supplierInfoSyncList) {
+            try {
+                if (!isSupplierExist(sync.getShopRef())) {//不存在于生产数据表
+                    count.incrementAndGet();
+                    System.out.println("posting requests : " + count);
+                    if (count.intValue() > 5000) {
+                        System.exit(1);
+                    }
+                    importBase(sync);
+                }else {
+                    System.out.println("SKip existing supplier id :" + sync.getShopRef());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new RuntimeException("异常id" + sync.getShopRef());
+            }
+        }
+    }
+
+    private boolean isSupplierExist(String shopRef){
+        return alibabaSupplierInfoPoMap.selectOne(new QueryWrapper<AlibabaSupplierInfoPo>().eq("shop_ref",shopRef)) != null ;
+    }
+
+    public void importBase(SupplierInfoSync sync){
+        AlibabaSupplierInfoPo alibabaSupplierInfoPo = HttpClientSupplierPuller.supplierPoFromJson(sync.getShopRef());
+        if(alibabaSupplierInfoPo == null){
+            System.out.println("Missing content");
+        }else{
+            alibabaSupplierInfoPo.setMainProduct(sync.getMainProduct());
+            alibabaSupplierInfoPo.setShopName(sync.getCompanyName());
+            alibabaSupplierInfoPo.setSourceSite("1688.com");
+            alibabaSupplierInfoPo.setBusinessType(sync.getBusinessType());
+            if(alibabaSupplierInfoPo.getShopLocation().equals("null")){
+                alibabaSupplierInfoPo.setShopLocation(sync.getShopLocation());
+            }
+            alibabaSupplierInfoPoMap.insert(alibabaSupplierInfoPo);
+            System.out.println("供应商入库:" + alibabaSupplierInfoPo.getShopRef());
+        }
+    }
+
+
+
+    @Test
+    public void testIsSupplierExist(){
+        System.out.println(isSupplierExist("https://0377888.1688.com/"));
+    }
 
 
 }

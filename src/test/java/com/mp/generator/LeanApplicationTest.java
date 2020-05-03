@@ -50,7 +50,7 @@ class LearnApplicationTest {
         System.out.println("删除 product_info dj-link： " + delDj + "条");
         //同步表sync the table
         System.out.println(" base sync method test --------");
-        List<ProductInfo> productInfos = productInfoMapper.selectList(null);
+        List<ProductInfo> productInfos = productInfoMapper.selectList(new QueryWrapper<ProductInfo>().gt("id",600000));
         AtomicInteger updateCount = new AtomicInteger();
         AtomicInteger scanPosition = new AtomicInteger();
         AtomicInteger count = new AtomicInteger();
@@ -164,9 +164,7 @@ class LearnApplicationTest {
     public void testClassify() {
         List<ProductInfoSync> syncList = productInfoSyncMapper.
                 selectList(new QueryWrapper<ProductInfoSync>()
-                        .lambda().like(ProductInfoSync::getKeyword, "浙江")
-                        .and(Wrapper -> Wrapper.isNull(ProductInfoSync::getChild)
-                                .or().eq(ProductInfoSync::getChild, "")));
+                        .lambda().like(ProductInfoSync::getKeyword, "浙江"));
         System.out.println(syncList.size());
 
         syncList.forEach(sync -> {
@@ -181,12 +179,26 @@ class LearnApplicationTest {
                     child = words[1];
                 }
             }
-            sync.setParent(parent);
-            sync.setChild(child);
-            productInfoSyncMapper.updateById(sync);
-            System.out.println("分类：" + parent + "---" + child);
+            if(StringUtils.isBlank(parent)){
+                parent = child;
+                sync.setParent(parent);
+            }else{
+                sync.setParent(parent);
+                sync.setChild(child);
+            }
+
+            updateProductInfoSyncByKeyword(sync);
+            System.out.println("分类入库：" + parent + "————————" + child);
         });
 
+    }
+
+    public void updateProductInfoSyncByKeyword(ProductInfoSync sync){
+        LambdaUpdateWrapper<ProductInfoSync> updateWrapper = new UpdateWrapper<ProductInfoSync>().lambda();
+        updateWrapper.set(ProductInfoSync::getParent,sync.getParent())
+                .set(ProductInfoSync::getChild,sync.getChild())
+                .eq(ProductInfoSync::getProductId,sync.getProductId());
+        productInfoSyncMapper.update(null,updateWrapper);
     }
 
     //分类广东

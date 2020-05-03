@@ -6,7 +6,7 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
     filters: stat
-    maxActive: 20
+    maxActive: 100
     initialSize: 1
     maxWait: 60000
     minIdle: 1

@@ -90,7 +90,7 @@ public class HttpClientSupplierPuller {
        }
        JsonObject jsonObject = element.getAsJsonObject();
        String biz_type_model = jsonObject.get("biz_type_model").getAsString();
-       String shopLocation = jsonObject.get("address").getAsString();
+       String shopLocation = jsonObject.get("address").toString();
        String companyName = jsonObject.get("title").getAsString();
 
        JsonObject base_info  = jsonObject.get("base_info").getAsJsonObject();
