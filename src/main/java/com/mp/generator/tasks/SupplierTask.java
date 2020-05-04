@@ -160,7 +160,7 @@ public class SupplierTask {
                 throw new RuntimeException("异常id" + sync.getShopRef());
             }
         }
-        return new AsyncResult<>(null);
+        return new AsyncResult<>(1L);
 
     }
 

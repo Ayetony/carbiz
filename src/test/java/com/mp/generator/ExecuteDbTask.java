@@ -38,7 +38,7 @@ public class ExecuteDbTask {
     SupplierInfoMapper supplierInfoMapper;
 
     @Autowired
-    AlibabaSupplierInfoPoMapper alibabaSupplierInfoPoMap;
+    AlibabaSupplierInfoPoMapper alibabaSupplierInfoPoMapper;
 
     @Autowired
     SupplierTask supplierTask;
@@ -144,7 +144,7 @@ public class ExecuteDbTask {
 
 
     private boolean isSupplierExist(String shopRef){
-        return alibabaSupplierInfoPoMap.selectOne(new QueryWrapper<AlibabaSupplierInfoPo>().eq("shop_ref",shopRef)) != null ;
+        return alibabaSupplierInfoPoMapper.selectOne(new QueryWrapper<AlibabaSupplierInfoPo>().eq("shop_ref",shopRef)) != null ;
     }
 
     public void importBase(SupplierInfoSync sync){
@@ -160,7 +160,7 @@ public class ExecuteDbTask {
             if(alibabaSupplierInfoPo.getShopLocation().equals("null")){
                 alibabaSupplierInfoPo.setShopLocation(sync.getShopLocation());
             }
-            alibabaSupplierInfoPoMap.insert(alibabaSupplierInfoPo);
+            alibabaSupplierInfoPoMapper.insert(alibabaSupplierInfoPo);
             System.out.println("供应商入库:" + alibabaSupplierInfoPo.getShopRef());
         }
     }

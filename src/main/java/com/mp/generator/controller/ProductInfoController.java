@@ -46,7 +46,12 @@ public class ProductInfoController {
           }
         //HttpClientPuller.getJsonByGetRequest(queryId)
         HttpClientProductPuller puller = new HttpClientProductPuller();
-        Map.Entry<AlibabaProductInfoPo, Multimap<String,String>> map =  puller.productInfoFromJson(queryId).entrySet().iterator().next();
+        Map<AlibabaProductInfoPo,Multimap<String,String>>  mapPuller = puller.productInfoFromJson(queryId);
+        if(mapPuller == null){
+            request.setAttribute("message","null resp");
+            request.getRequestDispatcher(request.getContextPath() + "/" + "index.jsp").forward(request,response);
+        }
+        Map.Entry<AlibabaProductInfoPo, Multimap<String,String>> map =  mapPuller.entrySet().iterator().next();
 
         Gson gson = new GsonBuilder().enableComplexMapKeySerialization().create();
         AlibabaProductInfoPo alibabaProductInfoPo = map.getKey();
