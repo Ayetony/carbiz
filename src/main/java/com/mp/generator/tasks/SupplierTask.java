@@ -1,4 +1,4 @@
-package com.mp.generator;
+package com.mp.generator.tasks;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
@@ -9,27 +9,23 @@ import com.mp.generator.entity.SupplierInfoSync;
 import com.mp.generator.mapper.AlibabaSupplierInfoPoMapper;
 import com.mp.generator.mapper.SupplierInfoMapper;
 import com.mp.generator.mapper.SupplierInfoSyncMapper;
-import com.mp.generator.tasks.SupplierTask;
 import com.mp.generator.utils.HttpClientSupplierPuller;
 import com.mp.generator.utils.UrlParse;
 import org.apache.commons.lang.StringUtils;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.AsyncResult;
+import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
-@SpringBootTest
-@RunWith(SpringRunner.class)
-public class ExecuteDbTask {
-
+@Component
+public class SupplierTask {
 
     @Autowired
     SupplierInfoSyncMapper supplierInfoSyncMapper;
@@ -40,14 +36,9 @@ public class ExecuteDbTask {
     @Autowired
     AlibabaSupplierInfoPoMapper alibabaSupplierInfoPoMap;
 
-    @Autowired
-    SupplierTask supplierTask;
-
 
     //octopus sync supplier
-    @Test
     public void syncSupplierTableTest(){
-
         //删除dj
         int delQty = supplierInfoMapper.delete(new QueryWrapper<SupplierInfo>().like("shop_ref", "dj").or().eq(true,"shop_ref",""));
         System.out.println("删除垃圾DJ链接数量 : " + delQty);
@@ -94,7 +85,7 @@ public class ExecuteDbTask {
         });
     }
 
-    public void updateSupplierSync(SupplierInfoSync sync) {
+    private void updateSupplierSync(SupplierInfoSync sync) {
         LambdaUpdateWrapper<SupplierInfoSync> updateWrapper = new UpdateWrapper<SupplierInfoSync>().lambda();
         updateWrapper.set(SupplierInfoSync::getCompanyName, sync.getCompanyName())
                 .set(SupplierInfoSync::getKeyword,sync.getKeyword())
@@ -122,32 +113,66 @@ public class ExecuteDbTask {
         if(!StringUtils.equals(old.getKeyword(),sync.getKeyword())){
             message += "Old-keyword:" + old.getKeyword() + "; New-keyword:" + sync.getKeyword();
         }
-
         return message;
     }
 
-    //  异步多任务
-    @Test
-    public void aliBaseSupplierTaskTest() throws ExecutionException, InterruptedException {
+    //todo
+    public void aliBaseSupplier(){
         int delSellers = supplierInfoSyncMapper.delete(new QueryWrapper<SupplierInfoSync>().eq(true,"seller_nick","www"));
         System.out.println("删除空seller 数量:" +  delSellers);
         AtomicInteger count = new AtomicInteger();
         List<SupplierInfoSync> supplierInfoSyncList = supplierInfoSyncMapper.selectList(null);
-        int size = supplierInfoSyncList.size();
-        Future<Long> future01 = supplierTask.importTask(supplierTask.segmentList(supplierInfoSyncList,0,size/2),count);
-        Future<Long> future02 = supplierTask.importTask(supplierTask.segmentList(supplierInfoSyncList,size/2,size),count);
-        while (!future01.isDone() || !future02.isDone()) {
-            Thread.sleep(1000);
-            System.out.println(future01.get() + "<future>" + future02.get());
+        for (SupplierInfoSync sync : supplierInfoSyncList) {
+            try {
+                if (!isSupplierExist(sync.getShopRef())) {//不存在于生产数据表
+                    count.incrementAndGet();
+                    System.out.println("posting requests : " + count);
+                    if (count.intValue() > 10000) {
+                        System.exit(1);
+                    }
+                    importSupplierBase(sync);
+                }else {
+                    System.out.println("SKip existing supplier id :" + sync.getShopRef());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new RuntimeException("异常id" + sync.getShopRef());
+            }
         }
     }
 
+    @Async
+    public Future<Long> importTask(List<SupplierInfoSync> supplierInfoSyncList, AtomicInteger count){
+        for (SupplierInfoSync sync : supplierInfoSyncList) {
+            try {
+                if (!isSupplierExist(sync.getShopRef())) {//不存在于生产数据表
+                    count.incrementAndGet();
+                    System.out.println("posting requests : " + count);
+                    if (count.intValue() > 3000) {
+                        System.exit(1);
+                    }
+                    importSupplierBase(sync);
+                }else {
+                    System.out.println("SKip existing supplier id :" + sync.getShopRef());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new RuntimeException("异常id" + sync.getShopRef());
+            }
+        }
+        return new AsyncResult<>(null);
 
-    private boolean isSupplierExist(String shopRef){
-        return alibabaSupplierInfoPoMap.selectOne(new QueryWrapper<AlibabaSupplierInfoPo>().eq("shop_ref",shopRef)) != null ;
     }
 
-    public void importBase(SupplierInfoSync sync){
+
+
+    public List<SupplierInfoSync> segmentList(List<SupplierInfoSync> supplierInfoSyncList,int fromIndex, int toIndex){
+
+        return supplierInfoSyncList.subList(fromIndex,toIndex);
+
+    }
+
+    private void importSupplierBase(SupplierInfoSync sync){
         AlibabaSupplierInfoPo alibabaSupplierInfoPo = HttpClientSupplierPuller.supplierPoFromJson(sync.getShopRef());
         if(alibabaSupplierInfoPo == null){
             System.out.println("Missing content");
@@ -165,12 +190,13 @@ public class ExecuteDbTask {
         }
     }
 
-
-
-    @Test
-    public void testIsSupplierExist(){
-        System.out.println(isSupplierExist("https://0377888.1688.com/"));
+    //生产表 supplier po 存在对应的 shop 进行判断
+    private boolean isSupplierExist(String shopRef){
+        return alibabaSupplierInfoPoMap.selectOne(new QueryWrapper<AlibabaSupplierInfoPo>().eq("shop_ref",shopRef)) != null ;
     }
+
+
+
 
 
 }
