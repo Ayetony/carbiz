@@ -69,7 +69,8 @@ public class HttpClientProductPuller {
 
     public static void main(String[] args) {
         //产品详情解析
-        new HttpClientProductPuller().productInfoFromJson("1136562860");//533816674053 614252193570
+//        new HttpClientProductPuller().productInfoFromJson("1136562860");//533816674053 614252193570
+        System.out.println(trimColons("尺码:36;"));
 
     }
 
@@ -131,6 +132,7 @@ public class HttpClientProductPuller {
         Multimap<String,String> skus = ArrayListMultimap.create();
         JsonElement img = element.getAsJsonObject().get("props_img");
         // Judge the existence
+        //todo trimColons  去除多余的冒号
         if( img == null || !img.isJsonObject()){
             element.getAsJsonObject().get("skus").getAsJsonObject().get("sku").
                     getAsJsonArray().forEach( e -> {

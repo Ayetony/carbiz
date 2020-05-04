@@ -1,7 +1,20 @@
-2020-05-04  INFO 9592 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
-2020-05-04  INFO 9592 --- [main] o.s.s.c.ThreadPoolTaskScheduler          : Initializing ExecutorService 'taskScheduler'
-2020-05-04  INFO 9592 --- [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 80 (http) with context path ''
-2020-05-04  INFO 9592 --- [main] com.mp.generator.LearnApplication        : Started LearnApplication in 3.694 seconds (JVM running for 4.627)
-2020-05-04  INFO 9592 --- [http-nio-0.0.0.0-80-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
-2020-05-04  INFO 9592 --- [http-nio-0.0.0.0-80-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
-2020-05-04  INFO 9592 --- [http-nio-0.0.0.0-80-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 4 ms
+2020-05-04  WARN 3316 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.ProductInfo.
+2020-05-04  WARN 3316 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.ProductInfoSync.
+2020-05-04  WARN 3316 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.SupplierInfoSync.
+2020-05-04  INFO 3316 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-05-04  INFO 3316 --- [main] o.s.s.c.ThreadPoolTaskScheduler          : Initializing ExecutorService 'taskScheduler'
+2020-05-04  INFO 3316 --- [main] com.mp.generator.LearnApplicationTest    : Started LearnApplicationTest in 4.101 seconds (JVM running for 5.482)
+2020-05-04  INFO 3316 --- [main] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} inited
+2020-05-04  INFO 1616 --- [main] com.mp.generator.LearnApplicationTest    : Starting LearnApplicationTest on SW3N3RNA8KLUGMO with PID 1616 (started by Administrator in D:\carbiz)
+2020-05-04  INFO 1616 --- [main] com.mp.generator.LearnApplicationTest    : No active profile set, falling back to default profiles: default
+2020-05-04  WARN 1616 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.ProductInfo.
+2020-05-04  WARN 1616 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.ProductInfoSync.
+2020-05-04  WARN 1616 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.SupplierInfoSync.
+2020-05-04  INFO 1616 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-05-04  INFO 1616 --- [main] o.s.s.c.ThreadPoolTaskScheduler          : Initializing ExecutorService 'taskScheduler'
+2020-05-04  INFO 1616 --- [main] com.mp.generator.LearnApplicationTest    : Started LearnApplicationTest in 4.626 seconds (JVM running for 6.209)
+2020-05-04  INFO 1616 --- [main] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} inited
+2020-05-04  INFO 1616 --- [SpringContextShutdownHook] o.s.s.c.ThreadPoolTaskScheduler          : Shutting down ExecutorService 'taskScheduler'
+2020-05-04  INFO 1616 --- [SpringContextShutdownHook] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2020-05-04  INFO 1616 --- [SpringContextShutdownHook] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} closing ...
+2020-05-04  INFO 1616 --- [SpringContextShutdownHook] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} closed
