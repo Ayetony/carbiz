@@ -165,8 +165,6 @@ class LearnApplicationTest {
         List<ProductInfoSync> syncList = productInfoSyncMapper.
                 selectList(new QueryWrapper<ProductInfoSync>()
                         .lambda().like(ProductInfoSync::getKeyword, "浙江"));
-        System.out.println(syncList.size());
-
         syncList.forEach(sync -> {
             String parent = null;
             String child = null;
@@ -193,6 +191,7 @@ class LearnApplicationTest {
 
     }
 
+    //避免空值传递
     public void updateProductInfoSyncByKeyword(ProductInfoSync sync){
         LambdaUpdateWrapper<ProductInfoSync> updateWrapper = new UpdateWrapper<ProductInfoSync>().lambda();
         updateWrapper.set(ProductInfoSync::getParent,sync.getParent())
@@ -206,7 +205,7 @@ class LearnApplicationTest {
     public void testClassifyCanton() {
         List<ProductInfoSync> syncList = productInfoSyncMapper.
                 selectList(new QueryWrapper<ProductInfoSync>()
-                        .lambda().like(ProductInfoSync::getKeyword, "浙江"));
+                        .lambda().like(ProductInfoSync::getKeyword, "广东"));
 //                        .and(Wrapper -> Wrapper.isNull(ProductInfoSync::getChild)
 //                                .or().eq(ProductInfoSync::getChild, "")));
         System.out.println(syncList.size());
@@ -215,7 +214,7 @@ class LearnApplicationTest {
             String parent = null;
             String child = null;
             String keyword = sync.getKeyword();
-            keyword = keyword.replace("浙江 ", "");
+            keyword = keyword.replace("广东 ", "");
             String[] words = keyword.split(" ");
             if (words.length > 0) {
                 parent = words[0];
@@ -223,9 +222,14 @@ class LearnApplicationTest {
                     child = words[1];
                 }
             }
-            sync.setParent(parent);
-            sync.setChild(child);
-            productInfoSyncMapper.updateById(sync);
+            if(StringUtils.isBlank(parent)){
+                parent = child;
+                sync.setParent(parent);
+            }else{
+                sync.setParent(parent);
+                sync.setChild(child);
+            }
+            updateProductInfoSyncByKeyword(sync);
             System.out.println("分类：" + parent + "---" + child);
         });
 

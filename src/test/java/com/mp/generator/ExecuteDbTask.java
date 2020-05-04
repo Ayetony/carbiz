@@ -122,6 +122,8 @@ public class ExecuteDbTask {
 
     @Test
     public void aliBaseSupplierTest(){
+        int delSellers = supplierInfoSyncMapper.delete(new QueryWrapper<SupplierInfoSync>().eq(true,"seller_nick","www"));
+        System.out.println("删除空seller 数量:" +  delSellers);
         AtomicInteger count = new AtomicInteger();
         List<SupplierInfoSync> supplierInfoSyncList = supplierInfoSyncMapper.selectList(null);
         for (SupplierInfoSync sync : supplierInfoSyncList) {
@@ -129,13 +131,14 @@ public class ExecuteDbTask {
                 if (!isSupplierExist(sync.getShopRef())) {//不存在于生产数据表
                     count.incrementAndGet();
                     System.out.println("posting requests : " + count);
-                    if (count.intValue() > 5000) {
+                    if (count.intValue() > 10000) {
                         System.exit(1);
                     }
                     importBase(sync);
                 }else {
                     System.out.println("SKip existing supplier id :" + sync.getShopRef());
                 }
+                //todo  concurrent execute for the suppliers
             } catch (Exception e) {
                 e.printStackTrace();
                 throw new RuntimeException("异常id" + sync.getShopRef());
@@ -154,6 +157,7 @@ public class ExecuteDbTask {
         }else{
             alibabaSupplierInfoPo.setMainProduct(sync.getMainProduct());
             alibabaSupplierInfoPo.setShopName(sync.getCompanyName());
+            alibabaSupplierInfoPo.setShopID(sync.getSellerNick());
             alibabaSupplierInfoPo.setSourceSite("1688.com");
             alibabaSupplierInfoPo.setBusinessType(sync.getBusinessType());
             if(alibabaSupplierInfoPo.getShopLocation().equals("null")){
