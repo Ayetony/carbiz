@@ -10,11 +10,13 @@ import com.mp.generator.mapper.AlibabaProductInfoPoMapper;
 import com.mp.generator.mapper.ProductInfoSyncMapper;
 import com.mp.generator.utils.HttpClientProductPuller;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -26,6 +28,8 @@ public class ProductTask {
 
     @Autowired
     AlibabaProductInfoPoMapper alibabaProductInfoPoMapper;
+
+    Random random = new Random();
 
 
     public List<ProductInfoSync> segmentList(List<ProductInfoSync> productInfoSyncList, int fromIndex, int toIndex){
@@ -56,7 +60,8 @@ public class ProductTask {
         return count > 0;
     }
 
-    public boolean importProductBase(ProductInfoSync sync) {
+    public boolean importProductBase(ProductInfoSync sync) throws InterruptedException {
+        Thread.sleep(random.nextInt(300)<<2);
         Map<AlibabaProductInfoPo, Multimap<String, String>> map = new HttpClientProductPuller().productInfoFromJson(sync.getProductId());//533816674053 614252193570
         if (map == null) {
             return false;
@@ -86,6 +91,7 @@ public class ProductTask {
         return true;
     }
 
+    @Async
     public Future<Long> importProductTask(List<ProductInfoSync> productInfoSyncList, AtomicInteger count){
         for (ProductInfoSync sync : productInfoSyncList) {
             try {
