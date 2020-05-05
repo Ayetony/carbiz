@@ -8,17 +8,27 @@
 <html>
 <head>
     <title>Formatter And TE</title>
-    <script type="text/javascript" src="/js/jquery.min.js"></script>
-    <script type="text/javascript" src="/js/jquery.jsonview.js"></script>
-    <link rel="stylesheet" href="/js/jquery.jsonview.css">
+    <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
+    <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery.jsonview.js"></script>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/js/jquery.jsonview.css">
 </head>
 <body>
+
 <div align="center">
-    <h3>Query by ID in private</h3>
-    <form action="/generator/productInfo/query_id" method="post">
+    <h2>Query by ID in private</h2>
+    <form action="${pageContext.request.contextPath}/generator/productInfo/query_id" method="post">
         <input type="text" placeholder="Query ID" name="query">
         <input type="submit" name="query" value="post">
     </form>
+
+    <br>
+    <h3> Product sku Excel for Vela  </h3>
+    <div>
+        <form action="${pageContext.request.contextPath}/generator/productInfo/excel/download" method="post">
+            <input type="submit" value="Download">
+        </form>
+        <P>limit 200,000 - 300,000 skus</P>
+    </div>
 
     <hr/>
     <div id="json"></div>
@@ -34,7 +44,7 @@
 
     <div style="display: none"><h3> Excel 清除空格与换行 </h3>
         <br>
-        <form action="/generator/sysUser/uploadExcel" enctype="multipart/form-data" method="post">
+        <form action="${pageContext.request.contextPath}/generator/sysUser/uploadExcel" enctype="multipart/form-data" method="post">
             <input type="file" name="fileName"><br><br>
             <input type="submit" value="上传">
         </form>

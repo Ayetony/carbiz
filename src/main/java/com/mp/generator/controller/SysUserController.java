@@ -81,7 +81,7 @@ public class SysUserController {
     }
 
 
-    private ResponseEntity<FileSystemResource> export(File file) {
+    public ResponseEntity<FileSystemResource> export(File file) {
         if (file == null) {
             return null;
         }

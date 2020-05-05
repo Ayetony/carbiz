@@ -1,13 +1,22 @@
 package com.mp.generator.controller;
 
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.google.common.collect.Multimap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mp.generator.entity.AlibabaProductInfoPo;
+import com.mp.generator.mapper.AlibabaProductInfoPoMapper;
+import com.mp.generator.utils.ExcelProcess;
 import com.mp.generator.utils.HttpClientProductPuller;
 import com.mp.generator.utils.JsonType;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,7 +25,11 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -30,6 +43,9 @@ import java.util.Map;
 @RestController
 @RequestMapping("/generator/productInfo")
 public class ProductInfoController {
+
+    @Autowired
+    AlibabaProductInfoPoMapper alibabaProductInfoPoMapper;
 
     @RequestMapping(value="/query_id", method= RequestMethod.POST)
     public void queryByProId(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -86,6 +102,31 @@ public class ProductInfoController {
         type.setSkus(map.getValue().asMap());
         return gson.toJson(type);
     }
+
+    @RequestMapping(value="/excel/download", method = RequestMethod.POST)
+    public ResponseEntity<FileSystemResource> downloadExcel(HttpServletResponse response) throws IOException {
+        List<AlibabaProductInfoPo>  productInfoPoList =  alibabaProductInfoPoMapper.
+                selectList(new QueryWrapper<AlibabaProductInfoPo>()
+                        .gt("id",300000).and(Wrapper -> Wrapper.lt("id",400000)));
+        File file = ExcelProcess.itemsSkuToExcel(productInfoPoList);
+        response.setContentType("multipart/form-data;charset=UTF-8");
+        return  excelInfo(file);
+    }
+
+
+    public ResponseEntity<FileSystemResource> excelInfo(File file) {
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
+        headers.add("Content-Disposition", "attachment; filename=" + file.getName() + ".xlsx");
+        headers.add("Pragma", "no-cache");
+        headers.add("Expires", "0");
+        headers.add("Last-Modified", new Date().toString());
+        headers.add("ETag", String.valueOf(System.currentTimeMillis()));
+
+        return ResponseEntity.ok().headers(headers).contentLength(file.length()).contentType(MediaType.parseMediaType("application/octet-stream")).body(new FileSystemResource(file));
+    }
+
 
 
 }

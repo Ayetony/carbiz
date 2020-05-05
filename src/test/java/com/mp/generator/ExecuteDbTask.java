@@ -134,11 +134,11 @@ public class ExecuteDbTask {
         AtomicInteger count = new AtomicInteger();
         List<SupplierInfoSync> supplierInfoSyncList = supplierInfoSyncMapper.selectList(null);
         int size = supplierInfoSyncList.size();
-        Future<Long> future01 = supplierTask.importTask(supplierTask.segmentList(supplierInfoSyncList,0,size/2),count);
-        Future<Long> future02 = supplierTask.importTask(supplierTask.segmentList(supplierInfoSyncList,size/2,size),count);
+        Future<Long> future01 = supplierTask.importSupplierTask(supplierTask.segmentList(supplierInfoSyncList,0,size/2),count);
+        Future<Long> future02 = supplierTask.importSupplierTask(supplierTask.segmentList(supplierInfoSyncList,size/2,size),count);
         while (!future01.isDone() || !future02.isDone()) {
             Thread.sleep(1000);
-            System.out.println(future01.get() + "<future>" + future02.get());
+            System.out.println(future01.get() + " ;  "+ future02.get());
         }
     }
 

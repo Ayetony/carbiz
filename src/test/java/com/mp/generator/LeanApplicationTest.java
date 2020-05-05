@@ -12,10 +12,8 @@ import com.mp.generator.entity.ProductInfoSync;
 import com.mp.generator.mapper.AlibabaProductInfoPoMapper;
 import com.mp.generator.mapper.ProductInfoMapper;
 import com.mp.generator.mapper.ProductInfoSyncMapper;
-import com.mp.generator.utils.Extractor;
-import com.mp.generator.utils.HttpClientProductPuller;
-import com.mp.generator.utils.JsonType;
-import com.mp.generator.utils.UrlParse;
+import com.mp.generator.tasks.ProductTask;
+import com.mp.generator.utils.*;
 import org.apache.commons.lang.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -23,9 +21,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @SpringBootTest
@@ -41,6 +42,9 @@ class LearnApplicationTest {
 
     @Autowired
     AlibabaProductInfoPoMapper alibabaProductInfoPoMapper;
+
+    @Autowired
+    ProductTask productTask;
 
 
     @Test
@@ -236,31 +240,17 @@ class LearnApplicationTest {
     }
 
     @Test
-    public void AliProductProduce() {
+    public void AliProductProduce() throws InterruptedException, ExecutionException {
         AtomicInteger count = new AtomicInteger();
-        List<ProductInfoSync> productInfoSyncList = productInfoSyncMapper.selectList(new QueryWrapper<ProductInfoSync>().like("keyword", "广东")
+        List<ProductInfoSync> productInfoSyncList = productInfoSyncMapper.selectList(new QueryWrapper<ProductInfoSync>().like("keyword", "浙江")
                 .isNotNull(true, "parent").and(Wrapper -> Wrapper.isNotNull(true, "child")));
-        for (ProductInfoSync sync : productInfoSyncList) {
-            try {
-                if (!isSkuSkip(sync) && !isExist(sync)) {//不存在于生产数据表，而且is_skip不为1
-
-                    count.incrementAndGet();
-                    System.out.println("posting requests : " + count);
-                    if (count.intValue() > 10001) {
-                        System.exit(1);
-                    }
-
-                    if (!normalBaseImport(sync)) {//api导入
-                        int tag = tagSkip(sync);
-                        System.out.println("request missing:" + sync.getProductId() + ";tagging skip qty:" + tag);
-                        continue;
-                    }
-                }
-                System.out.println("SKip existing sku product id :" + sync.getProductId());
-            } catch (Exception e) {
-                e.printStackTrace();
-                throw new RuntimeException("异常id" + sync.getProductId());
-            }
+        int size = productInfoSyncList.size();
+        Future<Long> future01 = productTask.importProductTask(productTask.segmentList(productInfoSyncList,0,size/3),count);
+        Future<Long> future02 = productTask.importProductTask(productTask.segmentList(productInfoSyncList,size/3,size*2/3),count);
+        Future<Long> future03 = productTask.importProductTask(productTask.segmentList(productInfoSyncList,size*2/3,size),count);
+        while (!future01.isDone() || !future02.isDone() || !future03.isDone()) {
+            Thread.sleep(500);
+            System.out.println(future01.get() + " ;  "+ future02.get() + " ; " + future03.get());
         }
     }
 
@@ -368,6 +358,14 @@ class LearnApplicationTest {
         type.setSkus(map.getValue().asMap());
 
         System.out.println(gson.toJson(type));
+    }
+
+    @Test
+    public void generateExcel() throws IOException {
+        List<AlibabaProductInfoPo>  productInfoPoList =  alibabaProductInfoPoMapper.
+                selectList(new QueryWrapper<AlibabaProductInfoPo>()
+                        .gt("id",200000).and(Wrapper -> Wrapper.lt("id",500000)));
+        ExcelProcess.itemsSkuToExcel(productInfoPoList);
     }
 
 

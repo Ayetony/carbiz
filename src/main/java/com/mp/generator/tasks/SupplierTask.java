@@ -142,7 +142,7 @@ public class SupplierTask {
     }
 
     @Async
-    public Future<Long> importTask(List<SupplierInfoSync> supplierInfoSyncList, AtomicInteger count){
+    public Future<Long> importSupplierTask(List<SupplierInfoSync> supplierInfoSyncList, AtomicInteger count){
         for (SupplierInfoSync sync : supplierInfoSyncList) {
             try {
                 if (!isSupplierExist(sync.getShopRef())) {//不存在于生产数据表
