@@ -1,4 +1,4 @@
-2020-05-06  INFO 10864 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
-2020-05-06  INFO 10864 --- [main] o.s.s.c.ThreadPoolTaskScheduler          : Initializing ExecutorService 'taskScheduler'
-2020-05-06  INFO 10864 --- [main] com.mp.generator.LearnApplicationTest    : Started LearnApplicationTest in 4.465 seconds (JVM running for 5.993)
-2020-05-06  INFO 10864 --- [main] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} inited
+2020-05-06  INFO 2824 --- [scheduling-1] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} inited
+2020-05-06  INFO 2824 --- [http-nio-0.0.0.0-80-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2020-05-06  INFO 2824 --- [http-nio-0.0.0.0-80-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2020-05-06  INFO 2824 --- [http-nio-0.0.0.0-80-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 7 ms

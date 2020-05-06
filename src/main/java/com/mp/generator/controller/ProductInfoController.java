@@ -107,7 +107,7 @@ public class ProductInfoController {
     public ResponseEntity<FileSystemResource> downloadExcel(HttpServletResponse response) throws IOException {
         List<AlibabaProductInfoPo>  productInfoPoList =  alibabaProductInfoPoMapper.
                 selectList(new QueryWrapper<AlibabaProductInfoPo>()
-                        .gt("id",300000).and(Wrapper -> Wrapper.lt("id",400000)));
+                        .gt("id",450000).and(Wrapper -> Wrapper.lt("id",500000)));
         File file = ExcelProcess.itemsSkuToExcel(productInfoPoList);
         response.setContentType("multipart/form-data;charset=UTF-8");
         return  excelInfo(file);

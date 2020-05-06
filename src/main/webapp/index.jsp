@@ -27,7 +27,7 @@
         <form action="${pageContext.request.contextPath}/generator/productInfo/excel/download" method="post">
             <input type="submit" value="Download">
         </form>
-        <P>limit 200,000 - 300,000 skus</P>
+        <P>limit 0 - 100,000 skus</P>
     </div>
 
     <hr/>
