@@ -1,4 +1,7 @@
-2020-05-06  INFO 2824 --- [scheduling-1] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} inited
-2020-05-06  INFO 2824 --- [http-nio-0.0.0.0-80-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
-2020-05-06  INFO 2824 --- [http-nio-0.0.0.0-80-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
-2020-05-06  INFO 2824 --- [http-nio-0.0.0.0-80-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 7 ms
+2020-05-07  WARN 13188 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.ProductInfo.
+2020-05-07  WARN 13188 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.ProductInfoSync.
+2020-05-07  WARN 13188 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.SupplierInfoSync.
+2020-05-07  INFO 13188 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-05-07  INFO 13188 --- [main] o.s.s.c.ThreadPoolTaskScheduler          : Initializing ExecutorService 'taskScheduler'
+2020-05-07  INFO 13188 --- [main] com.mp.generator.LearnApplicationTest    : Started LearnApplicationTest in 4.605 seconds (JVM running for 5.919)
+2020-05-07  INFO 13188 --- [main] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} inited

@@ -47,7 +47,7 @@ public class ProductSyncTableTask {
     public void AliProductMultiTaskProduce() throws InterruptedException, ExecutionException {
         AtomicInteger count = new AtomicInteger();
         List<ProductInfoSync> productInfoSyncList = productInfoSyncMapper.selectList(new QueryWrapper<ProductInfoSync>().like("keyword", "浙江")
-                .isNotNull(true, "parent").and(Wrapper -> Wrapper.isNotNull(true, "child")));
+                .isNotNull(true, "parent").and(Wrapper -> Wrapper.eq("is_skip",0)));
         int size = productInfoSyncList.size();
 ////        Future<Long> future01 = productTask.importProductTask(productTask.segmentList(productInfoSyncList,0,size/2),count);
         Future<Long> future01 = productTask.importProductTask(productTask.segmentList(productInfoSyncList,size/3,size/2-1),count);

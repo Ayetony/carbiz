@@ -38,7 +38,7 @@ public class ProductTask {
 
     }
 
-    public int tagSkip(ProductInfoSync sync) {
+    private int tagSkip(ProductInfoSync sync) {
         // updateWrapper 更新指定的字段
         sync.setIsSkip(1);
         sync.setProductId("1165850125");
@@ -46,21 +46,20 @@ public class ProductTask {
         updateWrapper
                 .set(ProductInfoSync::getIsSkip, 1)
                 .eq(ProductInfoSync::getProductId, sync.getProductId());
-        int result = productInfoSyncMapper.update(null, updateWrapper);
-        return result;
+        return productInfoSyncMapper.update(null, updateWrapper);
     }
 
     //判断是否跳过不存在sku的
-    public boolean isSkuSkip(ProductInfoSync sync) {
+    private boolean isSkuSkip(ProductInfoSync sync) {
         return sync.getIsSkip() == 1;
     }
 
-    public boolean isExist(ProductInfoSync sync) {
+    private boolean isExist(ProductInfoSync sync) {
         Integer count = alibabaProductInfoPoMapper.selectCount(new QueryWrapper<AlibabaProductInfoPo>().eq("product_i_d_in_source_site", sync.getProductId()));
         return count > 0;
     }
 
-    public boolean importProductBase(ProductInfoSync sync) throws InterruptedException {
+    private boolean importProductBase(ProductInfoSync sync) throws InterruptedException {
         Thread.sleep(random.nextInt(300)<<2);
         Map<AlibabaProductInfoPo, Multimap<String, String>> map = new HttpClientProductPuller().productInfoFromJson(sync.getProductId());//533816674053 614252193570
         if (map == null) {
