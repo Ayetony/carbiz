@@ -54,7 +54,7 @@ class LearnApplicationTest {
         System.out.println("删除 product_info dj-link： " + delDj + "条");
         //同步表sync the table
         System.out.println(" base sync method test --------");
-        List<ProductInfo> productInfos = productInfoMapper.selectList(new QueryWrapper<ProductInfo>().gt("id",600000));
+        List<ProductInfo> productInfos = productInfoMapper.selectList(new QueryWrapper<ProductInfo>().gt("id",1600000));
         AtomicInteger updateCount = new AtomicInteger();
         AtomicInteger scanPosition = new AtomicInteger();
         AtomicInteger count = new AtomicInteger();
@@ -64,7 +64,7 @@ class LearnApplicationTest {
             user.setShopId(UrlParse.shopRefToId(user.getShopRef()));
             hashMap.put(user.getProductRef(), user);//不断载入，通过product_ref 就可以去重了
         });
-//批量插入数据表
+//批量插入数据表 todo
         hashMap.forEach((key, productInfo) -> {
             System.out.println("Scan Db===>扫描数据行数:" + scanPosition.incrementAndGet());
             ProductInfoSync sync = new ProductInfoSync();
@@ -245,7 +245,7 @@ class LearnApplicationTest {
         List<ProductInfoSync> productInfoSyncList = productInfoSyncMapper.selectList(new QueryWrapper<ProductInfoSync>().like("keyword", "广东")
                 .isNotNull(true, "parent").and(Wrapper -> Wrapper.eq("is_skip",0)));
         int size = productInfoSyncList.size();
-        Future<Long> future01 = productTask.importProductTask(productTask.segmentList(productInfoSyncList,size*2/3,size),count);
+        Future<Long> future01 = productTask.importProductTask(productTask.segmentList(productInfoSyncList,size*3/4,size),count);
         while (!future01.isDone()) {
             future01.get();
         }
