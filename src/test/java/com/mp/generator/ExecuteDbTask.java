@@ -133,8 +133,7 @@ public class ExecuteDbTask {
         System.out.println("删除空seller 数量:" +  delSellers);
         AtomicInteger count = new AtomicInteger();
         List<SupplierInfoSync> supplierInfoSyncList = supplierInfoSyncMapper.selectList(null);
-        int size = supplierInfoSyncList.size();
-        Future<Long> future01 = supplierTask.importSupplierTask(supplierTask.segmentList(supplierInfoSyncList,0,size/2),count);
+        Future<Long> future01 = supplierTask.importSupplierTask(supplierInfoSyncList,count);
         while (!future01.isDone()) {
             future01.get();
         }

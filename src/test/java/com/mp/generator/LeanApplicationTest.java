@@ -54,7 +54,7 @@ class LearnApplicationTest {
         System.out.println("删除 product_info dj-link： " + delDj + "条");
         //同步表sync the table
         System.out.println(" base sync method test --------");
-        List<ProductInfo> productInfos = productInfoMapper.selectList(new QueryWrapper<ProductInfo>().gt("id",1600000));
+        List<ProductInfo> productInfos = productInfoMapper.selectList(new QueryWrapper<ProductInfo>().gt("id",3000000));
         AtomicInteger updateCount = new AtomicInteger();
         AtomicInteger scanPosition = new AtomicInteger();
         AtomicInteger count = new AtomicInteger();
@@ -243,7 +243,7 @@ class LearnApplicationTest {
     public void AliProductProduce() throws InterruptedException, ExecutionException {
         AtomicInteger count = new AtomicInteger();
         List<ProductInfoSync> productInfoSyncList = productInfoSyncMapper.selectList(new QueryWrapper<ProductInfoSync>().like("keyword", "广东")
-                .isNotNull(true, "parent").and(Wrapper -> Wrapper.eq("is_skip",0)));
+                .isNotNull(true, "parent").and(Wrapper -> Wrapper.eq("is_skip",0)).orderByDesc());
         int size = productInfoSyncList.size();
         Future<Long> future01 = productTask.importProductTask(productTask.segmentList(productInfoSyncList,size*3/4,size),count);
         while (!future01.isDone()) {
@@ -326,8 +326,16 @@ class LearnApplicationTest {
             alibabaProductInfoPo.setParentCatalog(sync.getParent());
             alibabaProductInfoPo.setChildCatalog(sync.getChild());
             alibabaProductInfoPo.setKeyword(sync.getKeyword());
-            alibabaProductInfoPo.setCrawlId(1);
-            alibabaProductInfoPo.setCrawlLink("https://fuzhuang.1688.com/");
+            if(StringUtils.indexOf(sync.getKeyword(),"母婴")!=-1){
+                alibabaProductInfoPo.setCrawlId(2);
+                alibabaProductInfoPo.setCrawlLink("https://muying.1688.com/");
+            }else if(StringUtils.indexOf(sync.getKeyword(),"家电")!=-1){
+                alibabaProductInfoPo.setCrawlId(3);
+                alibabaProductInfoPo.setCrawlLink("https://jiadian.1688.com/");
+            }else {
+                alibabaProductInfoPo.setCrawlId(1);
+                alibabaProductInfoPo.setCrawlLink("https://fuzhuang.1688.com/");
+            }
             alibabaProductInfoPoMapper.insert(alibabaProductInfoPo);
             count.incrementAndGet();
             System.out.println("正式入库：count" + count);

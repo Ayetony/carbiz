@@ -169,8 +169,13 @@ public class ProductSyncTableTask {
                     child = words[1];
                 }
             }
-            sync.setParent(parent);
-            sync.setChild(child);
+            if(StringUtils.isBlank(parent)){
+                parent = child;
+                sync.setParent(parent);
+            }else{
+                sync.setParent(parent);
+                sync.setChild(child);
+            }
             productInfoSyncMapper.updateById(sync);
             System.out.println("分类：" + parent + "---" + child + "id:" + sync.getProductId());
         });

@@ -23,9 +23,11 @@ public class HttpClientSupplierPuller {
     public static JsonElement getJson(String shopRef) {
 
         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-        RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(8000).setConnectTimeout(8000).build();
+        RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(30000).setConnectTimeout(30000).build();
         // shop_ref http://sinoks2008.1688.com/
-        String oneBoundApi = "https://api.onebound.cn/1688/api_call.php?nick=&shop_url=" + shopRef + "&api_name=seller_info&lang=zh-CN&key=tel18606528273&secret=20200417";
+        shopRef = StringUtils.substring(shopRef,0,shopRef.length() - 1);
+        System.out.println(shopRef);
+        String oneBoundApi = "https://api.onebound.cn/1688/api_call.php?nick=&api_name=seller_info&lang=zh-CN&key=tel18606528273&secret=20200417&cache=no&shop_url=" + shopRef;
         HttpPost httpPost ;
         httpPost = new HttpPost(oneBoundApi);
         httpPost.setConfig(requestConfig);
@@ -33,6 +35,7 @@ public class HttpClientSupplierPuller {
         String responseStr = "";
         try {
             // 由客户端执行(发送请求
+            Thread.sleep(5000);
             response = httpClient.execute(httpPost);
             // 从响应模型中获取响应实体
             HttpEntity responseEntity = response.getEntity();
@@ -44,7 +47,7 @@ public class HttpClientSupplierPuller {
             if (responseEntity != null) {
                 responseStr = EntityUtils.toString(responseEntity, StandardCharsets.UTF_8);
             }
-        } catch (ParseException | IOException e) {
+        } catch (ParseException | IOException | InterruptedException e) {
             e.printStackTrace();
         } finally {
             try {
@@ -64,12 +67,15 @@ public class HttpClientSupplierPuller {
 
     public static void main(String[] args) {
 
-        System.out.println(supplierPoFromJson("https://0572xcy.1688.com"));  //https://0572xcy.1688.com http://sinoks2008.1688.com/
+        System.out.println(supplierPoFromJson("https://000888666.1688.com/"));  //https://0572xcy.1688.com http://sinoks2008.1688.com/
 
     }
 
     private static JsonElement  purifyUser(String json){
         if(json == null){
+            return null;
+        }
+        if(json.indexOf("error")!=-1){
             return null;
         }
         JsonParser parser;
@@ -92,7 +98,6 @@ public class HttpClientSupplierPuller {
            return null;
        }
        JsonObject jsonObject = element.getAsJsonObject();
-        System.out.println(element.getAsJsonObject().toString());
        String biz_type_model = jsonObject.get("biz_type_model").getAsString();
        String  creditSellerRank = jsonObject.get("sale_level").getAsString();
        String shopLocation = jsonObject.get("address").getAsString();

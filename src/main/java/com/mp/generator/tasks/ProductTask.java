@@ -9,6 +9,7 @@ import com.mp.generator.entity.ProductInfoSync;
 import com.mp.generator.mapper.AlibabaProductInfoPoMapper;
 import com.mp.generator.mapper.ProductInfoSyncMapper;
 import com.mp.generator.utils.HttpClientProductPuller;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
@@ -80,8 +81,16 @@ public class ProductTask {
             alibabaProductInfoPo.setParentCatalog(sync.getParent());
             alibabaProductInfoPo.setChildCatalog(sync.getChild());
             alibabaProductInfoPo.setKeyword(sync.getKeyword());
-            alibabaProductInfoPo.setCrawlId(1);
-            alibabaProductInfoPo.setCrawlLink("https://fuzhuang.1688.com/");
+            if(StringUtils.indexOf(sync.getKeyword(),"母婴")!=-1){
+                alibabaProductInfoPo.setCrawlId(2);
+                alibabaProductInfoPo.setCrawlLink("https://muying.1688.com/");
+            }else if(StringUtils.indexOf(sync.getKeyword(),"家电")!=-1){
+                alibabaProductInfoPo.setCrawlId(3);
+                alibabaProductInfoPo.setCrawlLink("https://jiadian.1688.com/");
+            }else {
+                alibabaProductInfoPo.setCrawlId(1);
+                alibabaProductInfoPo.setCrawlLink("https://fuzhuang.1688.com/");
+            }
             alibabaProductInfoPoMapper.insert(alibabaProductInfoPo);
             count.incrementAndGet();
             System.out.println("正式入库：count" + count);
