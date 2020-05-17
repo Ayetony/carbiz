@@ -43,11 +43,11 @@ public class ProductSyncTableTask {
     ProductTask productTask;
 
     //sku 正式入库
-//    @Scheduled(fixedRate = 1000*60*60*100)
+    @Scheduled(fixedRate = 1000*60*60*100)
     public void AliProductMultiTaskProduce() throws InterruptedException, ExecutionException {
         AtomicInteger count = new AtomicInteger();
         List<ProductInfoSync> productInfoSyncList = productInfoSyncMapper.selectList(new QueryWrapper<ProductInfoSync>().like("keyword", "浙江")
-                .isNotNull(true, "parent").and(Wrapper -> Wrapper.eq("is_skip",0)));
+                .isNotNull(true, "parent").and(Wrapper -> Wrapper.eq("is_skip",0)).orderByDesc());
         int size = productInfoSyncList.size();
 ////        Future<Long> future01 = productTask.importProductTask(productTask.segmentList(productInfoSyncList,0,size/2),count);
         Future<Long> future02 = productTask.importProductTask(productTask.segmentList(productInfoSyncList,size/2,size*2/3-1),count);

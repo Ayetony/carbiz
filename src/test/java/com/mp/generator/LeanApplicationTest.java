@@ -195,6 +195,38 @@ class LearnApplicationTest {
 
     }
 
+    //分类母婴和家电
+    @Test
+    public void testBabyAndApplianceClassify() {
+        List<ProductInfoSync> syncList = productInfoSyncMapper.
+                selectList(new QueryWrapper<ProductInfoSync>()
+                        .lambda().like(ProductInfoSync::getKeyword, "母婴").or().like(ProductInfoSync::getKeyword, "家电"));
+        syncList.forEach(sync -> {
+            String parent = null;
+            String child = null;
+            String keyword = sync.getKeyword();
+            String[] words = keyword.split(" ");
+            if (words.length > 0) {
+                parent = words[0];
+                if (words.length > 1) {
+                    child = words[1];
+                }
+            }
+            if(StringUtils.isBlank(parent)){
+                parent = child;
+                sync.setParent(parent);
+            }else{
+                sync.setParent(parent);
+                sync.setChild(child);
+            }
+
+            updateProductInfoSyncByKeyword(sync);
+            System.out.println("分类入库：" + parent + "————————" + child);
+        });
+
+    }
+
+
     //避免空值传递
     public void updateProductInfoSyncByKeyword(ProductInfoSync sync){
         LambdaUpdateWrapper<ProductInfoSync> updateWrapper = new UpdateWrapper<ProductInfoSync>().lambda();

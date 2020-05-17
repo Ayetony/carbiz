@@ -35,7 +35,7 @@ public class HttpClientSupplierPuller {
         String responseStr = "";
         try {
             // 由客户端执行(发送请求
-            Thread.sleep(5000);
+            Thread.sleep(3000);
             response = httpClient.execute(httpPost);
             // 从响应模型中获取响应实体
             HttpEntity responseEntity = response.getEntity();
