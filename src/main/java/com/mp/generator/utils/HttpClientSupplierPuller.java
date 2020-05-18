@@ -23,7 +23,7 @@ public class HttpClientSupplierPuller {
     public static JsonElement getJson(String shopRef) {
 
         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-        RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(30000).setConnectTimeout(30000).build();
+        RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(35000).setConnectTimeout(35000).build();
         // shop_ref http://sinoks2008.1688.com/
         shopRef = StringUtils.substring(shopRef,0,shopRef.length() - 1);
         System.out.println(shopRef);
@@ -35,7 +35,7 @@ public class HttpClientSupplierPuller {
         String responseStr = "";
         try {
             // 由客户端执行(发送请求
-            Thread.sleep(3000);
+            Thread.sleep(3500);
             response = httpClient.execute(httpPost);
             // 从响应模型中获取响应实体
             HttpEntity responseEntity = response.getEntity();
@@ -100,7 +100,7 @@ public class HttpClientSupplierPuller {
        JsonObject jsonObject = element.getAsJsonObject();
        String biz_type_model = jsonObject.get("biz_type_model").getAsString();
        String  creditSellerRank = jsonObject.get("sale_level").getAsString();
-       String shopLocation = jsonObject.get("address").getAsString();
+       String shopLocation = jsonObject.get("address").toString();
        String companyName = jsonObject.get("title").getAsString();
 
        JsonObject base_info  = jsonObject.get("base_info").getAsJsonObject();

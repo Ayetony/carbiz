@@ -192,7 +192,7 @@ public class SupplierTask {
 
     //生产表 supplier po 存在对应的 shop 进行判断
     private boolean isSupplierExist(String shopRef){
-        return alibabaSupplierInfoPoMap.selectOne(new QueryWrapper<AlibabaSupplierInfoPo>().eq("shop_ref",shopRef)) != null ;
+        return alibabaSupplierInfoPoMap.selectCount(new QueryWrapper<AlibabaSupplierInfoPo>().eq("shop_ref",shopRef)) > 1 ;
     }
 
 
