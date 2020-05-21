@@ -148,7 +148,7 @@ public class SupplierTask {
                 if (!isSupplierExist(sync.getShopRef())) {//不存在于生产数据表
                     count.incrementAndGet();
                     System.out.println("posting requests : " + count);
-                    if (count.intValue() > 3000) {
+                    if (count.intValue() > 100000) {
                         System.exit(1);
                     }
                     importSupplierBase(sync);
@@ -176,6 +176,8 @@ public class SupplierTask {
         AlibabaSupplierInfoPo alibabaSupplierInfoPo = HttpClientSupplierPuller.supplierPoFromJson(sync.getShopRef());
         if(alibabaSupplierInfoPo == null){
             System.out.println("Missing content");
+            supplierInfoSyncMapper.deleteById(sync.getShopRef());
+            System.out.println("delete the missing id" + sync.getShopRef());
         }else{
             alibabaSupplierInfoPo.setMainProduct(sync.getMainProduct());
             alibabaSupplierInfoPo.setShopName(sync.getCompanyName());

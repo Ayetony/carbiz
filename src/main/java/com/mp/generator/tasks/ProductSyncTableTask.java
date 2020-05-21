@@ -43,16 +43,16 @@ public class ProductSyncTableTask {
     ProductTask productTask;
 
     //sku 正式入库
-//    @Scheduled(fixedRate = 1000*60*60*100)
+//    @Scheduled(fixedRate = 1000*60*60*200)
     public void AliProductMultiTaskProduce() throws InterruptedException, ExecutionException {
         AtomicInteger count = new AtomicInteger();
-        List<ProductInfoSync> productInfoSyncList = productInfoSyncMapper.selectList(new QueryWrapper<ProductInfoSync>().like("keyword", "浙江")
+        List<ProductInfoSync> productInfoSyncList = productInfoSyncMapper.selectList(new QueryWrapper<ProductInfoSync>().like("keyword", "广东")
                 .isNotNull(true, "parent").and(Wrapper -> Wrapper.eq("is_skip",0)).orderByDesc("update_time"));
         int size = productInfoSyncList.size();
 ////        Future<Long> future01 = productTask.importProductTask(productTask.segmentList(productInfoSyncList,0,size/2),count);
-        Future<Long> future02 = productTask.importProductTask(productTask.segmentList(productInfoSyncList,size/2,size*2/3-1),count);
-        Future<Long> future03 = productTask.importProductTask(productTask.segmentList(productInfoSyncList,size*2/3,size*3/4-1),count);
-        Future<Long> future04 = productTask.importProductTask(productTask.segmentList(productInfoSyncList,size*3/4,size),count);
+        Future<Long> future02 = productTask.importProductTask(productTask.segmentList(productInfoSyncList,0,size/2-1),count);
+        Future<Long> future03 = productTask.importProductTask(productTask.segmentList(productInfoSyncList,size/2,size*2/3-1),count);
+        Future<Long> future04 = productTask.importProductTask(productTask.segmentList(productInfoSyncList,size*2/3,size),count);
         while (!future02.isDone() || !future03.isDone() || !future04.isDone()) {
             future02.get();
             future03.get();

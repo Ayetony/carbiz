@@ -23,7 +23,7 @@ public class HttpClientSupplierPuller {
     public static JsonElement getJson(String shopRef) {
 
         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-        RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(35000).setConnectTimeout(35000).build();
+        RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(50000).setConnectTimeout(50000).build();
         // shop_ref http://sinoks2008.1688.com/
         shopRef = StringUtils.substring(shopRef,0,shopRef.length() - 1);
         System.out.println(shopRef);
@@ -35,7 +35,7 @@ public class HttpClientSupplierPuller {
         String responseStr = "";
         try {
             // 由客户端执行(发送请求
-            Thread.sleep(3500);
+            Thread.sleep(500);
             response = httpClient.execute(httpPost);
             // 从响应模型中获取响应实体
             HttpEntity responseEntity = response.getEntity();
@@ -111,6 +111,9 @@ public class HttpClientSupplierPuller {
        JsonObject trade_info = jsonObject.get("trade_info").getAsJsonObject();
 
        //base info
+       if(base_info.get("start_time") == null){
+           return null;
+       }
        String start_time = base_info.get("start_time").getAsString();
 //       String creditSellerRank = base_info.get("credit_seller_rank").getAsString();
 

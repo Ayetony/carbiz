@@ -53,7 +53,7 @@ public class ExecuteDbTask {
         System.out.println("删除垃圾DJ链接数量 : " + delQty);
         //查询所有并去重
         System.out.println(" mysql base sync supplier method testing --------");
-        List<SupplierInfo> supplierInfos = supplierInfoMapper.selectList(new QueryWrapper<SupplierInfo>().gt("id",600000).lt("id",1000000));
+        List<SupplierInfo> supplierInfos = supplierInfoMapper.selectList(new QueryWrapper<SupplierInfo>().gt("id",0));
         AtomicInteger updateCount = new AtomicInteger();
         AtomicInteger scanPosition = new AtomicInteger();
         AtomicInteger count = new AtomicInteger();
