@@ -92,6 +92,7 @@ public class ExecuteDbTask {
             }
 
         });
+//        supplierInfoMapper.delete(null);
     }
 
     public void updateSupplierSync(SupplierInfoSync sync) {
