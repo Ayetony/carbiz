@@ -54,7 +54,7 @@ class LearnApplicationTest {
         System.out.println("删除 product_info dj-link： " + delDj + "条");
         //同步表sync the table
         System.out.println(" base sync method test --------");
-        List<ProductInfo> productInfos = productInfoMapper.selectList(new QueryWrapper<ProductInfo>().gt("id",3200000));
+        List<ProductInfo> productInfos = productInfoMapper.selectList(new QueryWrapper<ProductInfo>().gt("id",0));// 一次数量不应超过50万条
         AtomicInteger updateCount = new AtomicInteger();
         AtomicInteger scanPosition = new AtomicInteger();
         AtomicInteger count = new AtomicInteger();
