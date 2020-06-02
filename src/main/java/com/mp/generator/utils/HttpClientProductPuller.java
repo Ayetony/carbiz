@@ -192,7 +192,7 @@ public class HttpClientProductPuller {
         return StringUtils.substring(size,index+1);
     }
 
-    private static JsonElement  purify(String json){
+    private static JsonElement purify(String json){
 
         if(json == null){
             return null;
