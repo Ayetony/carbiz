@@ -23,7 +23,7 @@ public class HttpClientSearchProduct {
     public static String search(String keyword, int page) {
 
         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-        String oneBoundApi = "https://api.onebound.cn/1688/api_call.php?key=tel18606528273&secret=20200417&api_name=item_search&q="+keyword+"&start_price=0&end_price=0&page="+ page +"&cat=0&discount_only=&sort=&page_size=40&cache=no&seller_info=no&nick=&seller_info=&nick=&ppath=&imgid=&filter=";
+        String oneBoundApi = "https://api.onebound.cn/1688/api_call.php?key=tel18606528273&secret=20200417&api_name=item_search&q="+keyword+"&start_price=0&end_price=0&page="+ page +"&cat=0&discount_only=&sort=&page_size=40&cache=no&seller_info=no&nick=&seller_info=&nick=&ppath=&imgid=&filter=filtId:1,2";
 
         HttpPost httpPost = new HttpPost(oneBoundApi);
         // 响应模型
@@ -60,6 +60,10 @@ public class HttpClientSearchProduct {
 
         return responseStr;
 
+    }
+
+    public static void main(String[] args) {
+        System.out.println(search("大爷",10));
     }
 
 

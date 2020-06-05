@@ -9,10 +9,7 @@ import com.google.gson.GsonBuilder;
 import com.mp.generator.entity.AlibabaProductInfoPo;
 import com.mp.generator.entity.ProductPojo;
 import com.mp.generator.mapper.AlibabaProductInfoPoMapper;
-import com.mp.generator.utils.ExcelProcess;
-import com.mp.generator.utils.HttpClientProductPuller;
-import com.mp.generator.utils.HttpClientSearchProduct;
-import com.mp.generator.utils.JsonType;
+import com.mp.generator.utils.*;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
@@ -90,7 +87,7 @@ public class ProductInfoController {
         Map<AlibabaProductInfoPo,Multimap<String,String>> httpClientMap = puller.productInfoFromJson(productId);
 
         if(httpClientMap == null){
-            return "not exist";
+            return "not exist or single low-quality page";
         }
         Map.Entry<AlibabaProductInfoPo, Multimap<String,String>> map =  httpClientMap.entrySet().iterator().next();
         if(map == null){
@@ -135,6 +132,33 @@ public class ProductInfoController {
         headers.add("ETag", String.valueOf(System.currentTimeMillis()));
         return ResponseEntity.ok().headers(headers).contentLength(file.length()).contentType(MediaType.parseMediaType("application/octet-stream")).body(new FileSystemResource(file));
     }
+
+    @RequestMapping(value="/query_all_id", method= RequestMethod.POST)
+    public String queryAllProductInfoId(@RequestParam("alibaba_product_id") String id){
+        //HttpClientPuller.getJsonByGetRequest(queryId)
+        if(StringUtils.isBlank(id)){
+            return "Error ID";
+        }
+        HttpClientDetailProductPuller puller = new HttpClientDetailProductPuller();
+        Map<AlibabaProductInfoPo,Multimap<String,String>> httpClientMap = puller.productInfoFromJson(id);
+
+        if(httpClientMap == null){
+            return "not exist";
+        }
+
+        Map.Entry<AlibabaProductInfoPo, Multimap<String,String>> map =  httpClientMap.entrySet().iterator().next();
+
+        if(map == null){
+            return "missing request";
+        }
+        Gson gson = new GsonBuilder().enableComplexMapKeySerialization().create();
+        AlibabaProductInfoPo alibabaProductInfoPo = map.getKey();
+        JsonType type = new JsonType();
+        type.setAlibabaProductInfoPo(alibabaProductInfoPo);
+        type.setSkus(map.getValue().asMap());
+        return gson.toJson(type);
+    }
+
 
 
 
