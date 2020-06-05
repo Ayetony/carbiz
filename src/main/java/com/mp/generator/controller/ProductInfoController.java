@@ -7,9 +7,11 @@ import com.google.common.collect.Multimap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mp.generator.entity.AlibabaProductInfoPo;
+import com.mp.generator.entity.ProductPojo;
 import com.mp.generator.mapper.AlibabaProductInfoPoMapper;
 import com.mp.generator.utils.ExcelProcess;
 import com.mp.generator.utils.HttpClientProductPuller;
+import com.mp.generator.utils.HttpClientSearchProduct;
 import com.mp.generator.utils.JsonType;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,6 +112,15 @@ public class ProductInfoController {
         File file = ExcelProcess.itemsSkuToExcel(productInfoPoList);
         response.setContentType("multipart/form-data;charset=UTF-8");
         return  excelInfo(file);
+    }
+
+
+    @RequestMapping(value="/search_pro", method= RequestMethod.POST)
+    public String searchAlibabaProducts(@RequestParam("keyword") String keyword,@RequestParam("page")Integer page){
+        HttpClientSearchProduct puller = new HttpClientSearchProduct();
+        Gson gson = new GsonBuilder().enableComplexMapKeySerialization().create();
+        List<ProductPojo> pojos = puller.generatePojos(keyword,page);
+        return gson.toJson(pojos);
     }
 
 
