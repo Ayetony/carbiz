@@ -76,7 +76,7 @@ public class HttpClientSupplierSearch {
         parser = new JsonParser();
         JsonObject jsonObject = parser.parse(json).getAsJsonObject();
         if(jsonObject.isJsonObject()){
-            return jsonObject.get("items").getAsJsonObject().get("item").getAsString();
+            return jsonObject.get("items").getAsJsonObject().get("item").toString();
         }
         return null;
     }
