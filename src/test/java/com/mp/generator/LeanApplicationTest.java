@@ -274,7 +274,7 @@ class LearnApplicationTest {
     @Test
     public void AliProductProduce() throws InterruptedException, ExecutionException {
         AtomicInteger count = new AtomicInteger();
-        List<ProductInfoSync> productInfoSyncList = productInfoSyncMapper.selectList(new QueryWrapper<ProductInfoSync>().like("keyword", "广东")
+        List<ProductInfoSync> productInfoSyncList = productInfoSyncMapper.selectList(new QueryWrapper<ProductInfoSync>().like("keyword", "母婴")
                 .isNotNull(true, "parent").and(Wrapper -> Wrapper.eq("is_skip",0)).orderByDesc());
         int size = productInfoSyncList.size();
         Future<Long> future01 = productTask.importProductTask(productTask.segmentList(productInfoSyncList,size*3/4,size),count);

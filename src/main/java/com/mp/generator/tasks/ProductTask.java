@@ -8,6 +8,7 @@ import com.mp.generator.entity.AlibabaProductInfoPo;
 import com.mp.generator.entity.ProductInfoSync;
 import com.mp.generator.mapper.AlibabaProductInfoPoMapper;
 import com.mp.generator.mapper.ProductInfoSyncMapper;
+import com.mp.generator.utils.HttpClientDetailProductPuller;
 import com.mp.generator.utils.HttpClientProductPuller;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +63,7 @@ public class ProductTask {
 
     private boolean importProductBase(ProductInfoSync sync) throws InterruptedException {
         Thread.sleep(random.nextInt(300)<<2);
-        Map<AlibabaProductInfoPo, Multimap<String, String>> map = new HttpClientProductPuller().productInfoFromJson(sync.getProductId());//533816674053 614252193570
+        Map<AlibabaProductInfoPo, Multimap<String, String>> map = new HttpClientDetailProductPuller().productInfoFromJson(sync.getProductId());//533816674053 614252193570
         if (map == null) {
             return false;
         }
