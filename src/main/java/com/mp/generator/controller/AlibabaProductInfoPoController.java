@@ -1,8 +1,11 @@
 package com.mp.generator.controller;
 
 
+import com.mp.generator.utils.HttpClientTaobaoProductPuller;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
-
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -16,5 +19,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/generator/alibabaProductInfoPo")
 public class AlibabaProductInfoPoController {
+
+    @RequestMapping(value="/taobao_sku", method= RequestMethod.POST)
+    public String queryAllProductInfoId(@RequestParam("taobao_id") String id){
+        //HttpClientPuller.getJsonByGetRequest(queryId)
+        if(StringUtils.isBlank(id)){
+            return "Error ID";
+        }
+        return HttpClientTaobaoProductPuller.getJsonByGetRequest(id).toString();
+    }
 
 }
