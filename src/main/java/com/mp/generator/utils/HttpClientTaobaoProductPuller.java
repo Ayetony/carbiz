@@ -17,9 +17,9 @@ import java.nio.charset.StandardCharsets;
 public class HttpClientTaobaoProductPuller {
 
     public static JsonElement getJsonByGetRequest(String id) {
-
+        //高级版
         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-        String oneBoundApi = "https://api.onebound.cn/taobao/api_call.php?num_iid=" + id + "&is_promotion=1&api_name=item_get&lang=zh-CN&key=tel18606528273&secret=20200417";
+        String oneBoundApi = "https://api.onebound.cn/taobao/api_call.php?num_iid=" + id + "&api_name=item_get_pro&lang=zh-CN&key=tel18606528273&secret=20200417";
         HttpPost httpPost = new HttpPost(oneBoundApi);
         // 响应模型
         CloseableHttpResponse response = null;
