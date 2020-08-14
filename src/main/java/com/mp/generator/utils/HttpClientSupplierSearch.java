@@ -1,10 +1,7 @@
 package com.mp.generator.utils;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.mp.generator.entity.ProductPojo;
 import org.apache.http.HttpEntity;
 import org.apache.http.ParseException;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -15,8 +12,6 @@ import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
 
 public class HttpClientSupplierSearch {
 
