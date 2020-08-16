@@ -1,6 +1,7 @@
 package com.mp.generator.controller;
 
 
+import com.mp.generator.utils.HttpClientTaobaoCatPicker;
 import com.mp.generator.utils.HttpClientTaobaoProductPuller;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +28,14 @@ public class AlibabaProductInfoPoController {
             return "Error ID";
         }
         return HttpClientTaobaoProductPuller.getJsonByGetRequest(id).toString();
+    }
+
+    @RequestMapping(value="/taobao_cat", method= RequestMethod.POST)
+    public String queryTaobaoCat(@RequestParam("taobao_id") String id){
+        if(StringUtils.isBlank(id)){
+            return "Error ID";
+        }
+        return HttpClientTaobaoCatPicker.getJsonByGetRequest(id).toString();
     }
 
 }
