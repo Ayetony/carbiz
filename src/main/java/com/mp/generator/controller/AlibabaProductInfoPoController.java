@@ -3,6 +3,7 @@ package com.mp.generator.controller;
 
 import com.mp.generator.utils.HttpClientTaobaoCatPicker;
 import com.mp.generator.utils.HttpClientTaobaoProductPuller;
+import com.mp.generator.utils.HttpTaobaoRecommendPro;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -36,6 +37,14 @@ public class AlibabaProductInfoPoController {
             return "Error ID";
         }
         return HttpClientTaobaoCatPicker.getJsonByGetRequest(id).toString();
+    }
+
+    @RequestMapping(value="/taobao_recommend", method= RequestMethod.POST)
+    public String recommendFromTaobao(@RequestParam("catName") String catName){
+//        if(StringUtils.isBlank(catName)){
+//            return "Error ID";
+//        }
+        return HttpTaobaoRecommendPro.getJsonByGetRequest(catName).toString();
     }
 
 }
