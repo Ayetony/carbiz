@@ -1,9 +1,0 @@
-2020-05-05  WARN 3328 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.ProductInfo.
-2020-05-05  WARN 3328 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.ProductInfoSync.
-2020-05-05  WARN 3328 --- [main] c.b.m.core.metadata.TableInfoHelper      : Warn: Could not find @TableId in Class: com.mp.generator.entity.SupplierInfoSync.
-2020-05-05  INFO 3328 --- [main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
-2020-05-05  INFO 3328 --- [main] o.s.s.c.ThreadPoolTaskScheduler          : Initializing ExecutorService 'taskScheduler'
-2020-05-05  INFO 3328 --- [main] com.mp.generator.ExecuteDbTask           : Started ExecuteDbTask in 5.147 seconds (JVM running for 6.395)
-2020-05-05  INFO 3328 --- [main] com.alibaba.druid.pool.DruidDataSource   : {dataSource-1} inited
-2020-05-05  INFO 3328 --- [SpringContextShutdownHook] o.s.s.c.ThreadPoolTaskScheduler          : Shutting down ExecutorService 'taskScheduler'
-2020-05-05  INFO 3328 --- [SpringContextShutdownHook] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'

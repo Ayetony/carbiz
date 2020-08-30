@@ -32,17 +32,17 @@ mybatis-plus:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 debug: false
-logging:
-  file:
-    max-history: 48
-    max-size: 1000
-    path: src/mylog.log
-  level:
-    com:
-      mp:
-        generator:
-          controller:
-            SysUserController: info
-  pattern:
-    dateformat: yyyy-MM-dd
+#logging:
+#  file:
+#    max-history: 48
+#    max-size: 1000
+#    path: src/mylog.log
+#  level:
+#    com:
+#      mp:
+#        generator:
+#          controller:
+#            SysUserController: info
+#  pattern:
+#    dateformat: yyyy-MM-dd
 
