@@ -159,6 +159,15 @@ public class ProductInfoController {
         return gson.toJson(type);
     }
 
+    @RequestMapping(value="/query_fully_all", method= RequestMethod.POST)
+    public String queryFullyProductInfoId(@RequestParam("product_id") String id){
+
+        if(StringUtils.isBlank(id)){
+            return "Error ID";
+        }
+        return HttpClientProductFullyPuller.getJsonByGetRequest(id,true);
+    }
+
 
 
 
