@@ -169,6 +169,13 @@ public class ProductInfoController {
     }
 
 
+    @RequestMapping(value="/search_shopee_pro", method= RequestMethod.POST)
+    public String searchShopeeProducts(@RequestParam("keyword") String keyword,@RequestParam("page")Integer page){
+
+        HttpClientShopeeSearchPuller shopeeSearchPuller = new HttpClientShopeeSearchPuller();
+        return shopeeSearchPuller.purify(shopeeSearchPuller.search(keyword,page));
+    }
+
 
 
 }
