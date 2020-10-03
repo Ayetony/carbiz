@@ -66,22 +66,26 @@ public class HotProductServiceImpl extends ServiceImpl<HotProductMapper, HotProd
             if(!hotAPIEntityList.contains(cb) && hotProductMap.containsKey(productLink)){
                 entity.setHotCrossborderProduct(cb);
                 HotProduct hotProduct = hotProductMap.get(productLink);
-                entity.setHotProduct(hotProduct);
                 String productPrice = hotProductMap.get(productLink).getProductPrice();
-
-                System.out.println(productPrice);
-
                 String turnover = hotProduct.getMonthlyTurnover();
-                if(turnover.indexOf("万") != -1){
-                    turnover.replace("万", "");
+                String numOfcomments = hotProduct.getNumberOfComments();
+                if(turnover.indexOf("万") != -1 ){
+                    turnover = turnover.replace("万", "");
                 }
+
+                if(numOfcomments.indexOf("万") != -1){
+                   numOfcomments = numOfcomments.replace("万", "");
+                }
+
+                hotProduct.setNumberOfComments(numOfcomments);
+                hotProduct.setMonthlyTurnover(turnover);
+
                 try {
                     List<String> doubleList = Extractor.trimToString(productPrice);
                     if(doubleList.size() > 0) {
                         entity.setMinPrice(doubleList.get(0));
                         entity.setMaxPrice(doubleList.get(doubleList.size() - 1));
-                        entity.getHotProduct().setMonthlyTurnover(turnover);
-                        entity.getHotProduct().setProductPrice(productPrice);
+                        entity.setHotProduct(hotProduct);
                         hotAPIEntityList.add(entity);
                     }
                 }catch (NumberFormatException e){
