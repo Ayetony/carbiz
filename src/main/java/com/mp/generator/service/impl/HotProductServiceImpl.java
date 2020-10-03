@@ -46,9 +46,6 @@ public class HotProductServiceImpl extends ServiceImpl<HotProductMapper, HotProd
         Map<String,HotProduct> hotProductMap = new HashMap<>();
 
         hotProducts.forEach( hotProduct -> {
-            if(hotProduct.getProductLink().isBlank()){
-                System.out.println(hotProduct.getProductLink());
-            }
             String link = StringUtils.trim(hotProduct.getProductLink());
             links.add(link);
             hotProductMap.put(link,hotProduct);
