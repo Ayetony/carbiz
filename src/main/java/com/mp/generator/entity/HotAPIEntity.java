@@ -9,6 +9,8 @@ public class HotAPIEntity implements Serializable {
 
     private HotCrossborderProduct hotCrossborderProduct;
     private HotProduct hotProduct;
+    private String minPrice;
+    private String maxPrice;
 
 
 }

@@ -32,25 +32,50 @@ class LearnApplicationTest {
 
 
     @Autowired
-    private ProductInfoMapper productInfoMapper;
-
-    @Autowired
     ProductInfoSyncMapper productInfoSyncMapper;
-
     @Autowired
     AlibabaProductInfoPoMapper alibabaProductInfoPoMapper;
-
     @Autowired
     ProductTask productTask;
-
+    @Autowired
+    private ProductInfoMapper productInfoMapper;
     @Autowired
     private HotProductMapper hotProductMapper;
 
     @Autowired
     private HotCrossborderProductMapper hotCrossborderProductMapper;
 
+    public static String diff(ProductInfoSync old, ProductInfoSync sync) {
+
+        String message = "";
+        if (!StringUtils.equals(old.getProductName(), sync.getProductName())) {
+            message += "Old-ProductName:" + old.getProductName() + "; New-ProductName:" + sync.getProductName();
+        }
+
+        if (!StringUtils.equals(old.getShopName(), sync.getShopName())) {
+            message += "Old-ShopName:" + old.getShopName() + "; New-ShopName:" + sync.getShopName();
+        }
+
+        if (old.getCurrentPrice().intValue() != sync.getCurrentPrice().intValue()) {
+            message += "Old-CurrentPrice:" + old.getCurrentPrice() + "; New-CurrentPrice:" + sync.getCurrentPrice();
+        }
+
+        if (old.getLoyalYears().intValue() != sync.getLoyalYears().intValue()) {
+            message += "Old-LoyalYears:" + old.getLoyalYears() + "; New-LoyalYears:" + sync.getLoyalYears();
+        }
+
+        if (old.getTotalSaleThisMonth().intValue() != sync.getTotalSaleThisMonth().intValue()) {
+            message += "Old-TotalSaleThisMonth:" + old.getTotalSaleThisMonth() + "; New-TotalSaleThisMonth:" + sync.getTotalSaleThisMonth();
+        }
+
+        if(!old.getKeyword().equals(sync.getKeyword())){
+            message += "Old-keyword:" + old.getKeyword() + "; New-keyword:" + sync.getKeyword();
+        }
+
+        return message;
 
 
+    }
 
     @Test
     public void testSelect() {//八爪鱼表数据删除dj链接，去重后导入到sync产品表
@@ -117,45 +142,11 @@ class LearnApplicationTest {
         productInfoSyncMapper.update(null, updateWrapper);
     }
 
-
     @Test
     public void testId() {
         ProductInfoSync sync = productInfoSyncMapper.selectById("44307401770");
         System.out.println(sync.getProductName());
     }
-
-    public static String diff(ProductInfoSync old, ProductInfoSync sync) {
-
-        String message = "";
-        if (!StringUtils.equals(old.getProductName(), sync.getProductName())) {
-            message += "Old-ProductName:" + old.getProductName() + "; New-ProductName:" + sync.getProductName();
-        }
-
-        if (!StringUtils.equals(old.getShopName(), sync.getShopName())) {
-            message += "Old-ShopName:" + old.getShopName() + "; New-ShopName:" + sync.getShopName();
-        }
-
-        if (old.getCurrentPrice().intValue() != sync.getCurrentPrice().intValue()) {
-            message += "Old-CurrentPrice:" + old.getCurrentPrice() + "; New-CurrentPrice:" + sync.getCurrentPrice();
-        }
-
-        if (old.getLoyalYears().intValue() != sync.getLoyalYears().intValue()) {
-            message += "Old-LoyalYears:" + old.getLoyalYears() + "; New-LoyalYears:" + sync.getLoyalYears();
-        }
-
-        if (old.getTotalSaleThisMonth().intValue() != sync.getTotalSaleThisMonth().intValue()) {
-            message += "Old-TotalSaleThisMonth:" + old.getTotalSaleThisMonth() + "; New-TotalSaleThisMonth:" + sync.getTotalSaleThisMonth();
-        }
-
-        if(!old.getKeyword().equals(sync.getKeyword())){
-            message += "Old-keyword:" + old.getKeyword() + "; New-keyword:" + sync.getKeyword();
-        }
-
-        return message;
-
-
-    }
-
 
     @Test
     public void testDj() {
@@ -420,6 +411,7 @@ class LearnApplicationTest {
 
     @Test
     public void getActualHotPro(){
+
         QueryWrapper<HotProduct> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda().isNotNull(HotProduct::getProcurementRepetitionRate).isNotNull(HotProduct::getOriginalDeliverAddr).
                 isNotNull(HotProduct::getProductLink).isNotNull(HotProduct::getLogisticFee);
@@ -428,9 +420,6 @@ class LearnApplicationTest {
         Map<String,HotProduct> hotProductMap = new HashMap<>();
 
         hotProducts.forEach( hotProduct -> {
-            if(hotProduct.getProductLink().isBlank()){
-                System.out.println(hotProduct.getProductLink());
-            }
             String link = StringUtils.trim(hotProduct.getProductLink());
             links.add(link);
             hotProductMap.put(link,hotProduct);
@@ -441,7 +430,7 @@ class LearnApplicationTest {
         List<HotCrossborderProduct> hotCbList = hotCrossborderProductMapper.selectList(hotCrossborderProductQueryWrapper);
 
 
-       List<HotAPIEntity> hotAPIEntityList = new ArrayList<>();
+        List<HotAPIEntity> hotAPIEntityList = new ArrayList<>();
 
         for (HotCrossborderProduct cb : hotCbList) {
             HotAPIEntity entity = new HotAPIEntity();
@@ -449,25 +438,29 @@ class LearnApplicationTest {
 
             if(!hotAPIEntityList.contains(cb) && hotProductMap.containsKey(productLink)){
                 entity.setHotCrossborderProduct(cb);
-                entity.setHotProduct(hotProductMap.get(productLink));
+                HotProduct hotProduct = hotProductMap.get(productLink);
+                entity.setHotProduct(hotProduct);
                 String productPrice = hotProductMap.get(productLink).getProductPrice();
-                productPrice = productPrice.replace("\n","").replace(" ","");
-                entity.getHotProduct().setProductPrice(productPrice);
-                hotAPIEntityList.add(entity);
+                String turnover = hotProduct.getMonthlyTurnover();
+                if(turnover.indexOf("万") != -1){
+                    turnover.replace("万", "");
+                }
+                try {
+                    List<String> doubleList = Extractor.trimToString(productPrice);
+                    if(doubleList.size() > 0) {
+                        entity.setMinPrice(doubleList.get(0));
+                        entity.setMaxPrice(doubleList.get(doubleList.size() - 1));
+                        entity.getHotProduct().setMonthlyTurnover(turnover);
+                        entity.getHotProduct().setProductPrice(productPrice);
+                        hotAPIEntityList.add(entity);
+                    }
+                }catch (NumberFormatException e){
+                    continue;
+                }
             }
         }
-
-        System.out.println("map keys:" + hotAPIEntityList.size());
-        System.out.println(hotCbList.size());
-
         Gson gson = new GsonBuilder().create();
-        String str = gson.toJson(hotAPIEntityList);
-        System.out.println(str);
-
-
-
-
-
+//        System.out.println(gson.toJson(hotAPIEntityList));
     }
 
 
