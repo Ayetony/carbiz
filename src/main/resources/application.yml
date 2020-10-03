@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:mysql://rm-2zez6a4q4b1srt5m1ro.mysql.rds.aliyuncs.com:3306/vela_test?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+    url: jdbc:mysql://rm-2zez6a4q4b1srt5m1ro.mysql.rds.aliyuncs.com:3306/vela_test?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&zeroDateTimeBehavior=convertToNull
     username: hkttty0001
     password: Naya00001
     type: com.alibaba.druid.pool.DruidDataSource
