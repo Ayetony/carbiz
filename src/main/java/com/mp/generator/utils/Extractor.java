@@ -78,7 +78,8 @@ public class Extractor {
         Collections.sort(stringList);
         stringList.forEach(System.out::println);
         return stringList;
-
     }
+
+
 
 }

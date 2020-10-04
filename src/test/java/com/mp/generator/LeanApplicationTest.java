@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mp.generator.entity.*;
 import com.mp.generator.mapper.*;
+import com.mp.generator.service.impl.HotProductServiceImpl;
 import com.mp.generator.tasks.ProductTask;
 import com.mp.generator.utils.*;
 import org.apache.commons.lang.StringUtils;
@@ -44,6 +45,9 @@ class LearnApplicationTest {
 
     @Autowired
     private HotCrossborderProductMapper hotCrossborderProductMapper;
+
+    @Autowired
+    private HotProductServiceImpl hotProductService;
 
     public static String diff(ProductInfoSync old, ProductInfoSync sync) {
 
@@ -469,6 +473,10 @@ class LearnApplicationTest {
         System.out.println(hotCrossborderProductMapper.selectList(null).size());
     }
 
+    @Test
+    public void testHotProFormatter(){
+        System.out.println(hotProductService.getEntityByHotProductsJSON());
+    }
 
 }
 

@@ -41,7 +41,7 @@ public class HotProductServiceImpl extends ServiceImpl<HotProductMapper, HotProd
     public String getEntityByHotProductsJSON() {
         QueryWrapper<HotProduct> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda().isNotNull(HotProduct::getProcurementRepetitionRate).isNotNull(HotProduct::getOriginalDeliverAddr).
-                isNotNull(HotProduct::getProductLink).isNotNull(HotProduct::getLogisticFee);
+                isNotNull(HotProduct::getProductLink).isNotNull(HotProduct::getLogisticFee).isNotNull(HotProduct::getNumberOfComments);
         List<HotProduct> hotProducts = hotProductMapper.selectList(queryWrapper);
         List<String> links = new ArrayList<>() ;
         Map<String,HotProduct> hotProductMap = new HashMap<>();
@@ -69,6 +69,7 @@ public class HotProductServiceImpl extends ServiceImpl<HotProductMapper, HotProd
                 String productPrice = hotProductMap.get(productLink).getProductPrice();
                 String turnover = hotProduct.getMonthlyTurnover();
                 String numOfcomments = hotProduct.getNumberOfComments();
+                String crossBorderWeight = hotProduct.getCrossBorderWeight();
                 if(turnover.indexOf("万") != -1 ){
                     turnover = turnover.replace("万", "");
                 }
@@ -79,6 +80,8 @@ public class HotProductServiceImpl extends ServiceImpl<HotProductMapper, HotProd
 
                 hotProduct.setNumberOfComments(numOfcomments);
                 hotProduct.setMonthlyTurnover(turnover);
+                hotProduct.setCrossBorderWeight(StringUtils.strip(crossBorderWeight).replace("kg",""));
+
 
                 try {
                     List<String> doubleList = Extractor.trimToString(productPrice);
