@@ -58,24 +58,27 @@ public class Extractor {
     }
 
     public static void main(String[] args) {
-        trimToString("¥4.0 - .2¥2.95  7.22w");
+        trimToString("¥2.960 - ¥3.26¥2.95 ¥3.70");
     }
 
     public static List<String> trimToString(String productPrice){
 
+        productPrice = StringUtils.deleteWhitespace(productPrice);
         List<String> stringList = new ArrayList<>();
         StringBuffer stringBuffer = new StringBuffer();
         for (char c : productPrice.toCharArray()) {
-            if(Character.isDigit(c) || c == '.'  && !Character.isSpaceChar(c)){
+            if(Character.isDigit(c) || c == '.'){
                 stringBuffer.append(c);
             }else{
-                if(!stringList.contains(stringBuffer) && stringBuffer.toString().contains(".")) {
+                if(StringUtils.isNotBlank(stringBuffer.toString())) {
                     stringList.add(stringBuffer.toString());
                 }
                 stringBuffer = new StringBuffer();
             }
         }
+        stringList.add(stringBuffer.toString());
         Collections.sort(stringList);
+        System.out.println(stringList.size());
         stringList.forEach(System.out::println);
         return stringList;
     }
