@@ -41,7 +41,7 @@ public class HotProductServiceImpl extends ServiceImpl<HotProductMapper, HotProd
     public String getEntityByHotProductsJSON() {
         QueryWrapper<HotProduct> queryWrapper = new QueryWrapper<>();
         queryWrapper.lambda().isNotNull(HotProduct::getProcurementRepetitionRate).isNotNull(HotProduct::getOriginalDeliverAddr).
-                isNotNull(HotProduct::getProductLink).isNotNull(HotProduct::getLogisticFee).isNotNull(HotProduct::getNumberOfComments);
+                isNotNull(HotProduct::getProductLink).isNotNull(HotProduct::getLogisticFee).isNotNull(HotProduct::getNumberOfComments).isNotNull(HotProduct::getMonthlyTurnover);
         List<HotProduct> hotProducts = hotProductMapper.selectList(queryWrapper);
         List<String> links = new ArrayList<>() ;
         Map<String,HotProduct> hotProductMap = new HashMap<>();
@@ -70,11 +70,21 @@ public class HotProductServiceImpl extends ServiceImpl<HotProductMapper, HotProd
                 String turnover = hotProduct.getMonthlyTurnover();
                 String numOfcomments = hotProduct.getNumberOfComments();
                 String crossBorderWeight = hotProduct.getCrossBorderWeight();
-                turnover = turnover.replace("万", "").replace("+","");
-                turnover = String.valueOf(Integer.parseInt(turnover)*10000);
 
-                numOfcomments = numOfcomments.replace("万", "").replace("+","");
-                numOfcomments = String.valueOf(Integer.parseInt(numOfcomments)*10000);
+
+                turnover.replace("+","");
+                if(StringUtils.contains(turnover,"万")) {
+                    turnover = turnover.replace("万", "");
+                    turnover = String.valueOf(Integer.parseInt(turnover) * 10000);
+                }
+
+
+
+                numOfcomments.replace("+","");
+                if(StringUtils.contains(numOfcomments,"万")) {
+                    numOfcomments = numOfcomments.replace("万","");
+                    numOfcomments = String.valueOf(Integer.parseInt(numOfcomments) * 10000);
+                }
 
                 hotProduct.setNumberOfComments(numOfcomments);
                 hotProduct.setMonthlyTurnover(turnover);
