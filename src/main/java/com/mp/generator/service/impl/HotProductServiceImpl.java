@@ -94,8 +94,8 @@ public class HotProductServiceImpl extends ServiceImpl<HotProductMapper, HotProd
                 try {
                     List<String> doubleList = Extractor.trimToString(productPrice);
                     if(doubleList.size() > 0) {
-                        entity.setMinPrice(doubleList.get(0));
-                        entity.setMaxPrice(doubleList.get(doubleList.size() - 1));
+                        entity.setMinPrice(Extractor.getMin(doubleList));
+                        entity.setMaxPrice(Extractor.getMax(doubleList));
                         entity.setHotProduct(hotProduct);
                         hotAPIEntityList.add(entity);
                     }

@@ -58,8 +58,8 @@ public class Extractor {
     }
 
     public static void main(String[] args) {
-//        trimToString("¥2.960 - ¥3.26¥2.95 ¥3.70");
-        System.out.println("3000万+");
+        trimToString("¥\\n    5.00\\n     - \\n    ¥\\n    21.80");
+//        System.out.println("3000万+");
 
     }
 
@@ -79,12 +79,36 @@ public class Extractor {
             }
         }
         stringList.add(stringBuffer.toString());
-        Collections.sort(stringList);
         System.out.println(stringList.size());
         stringList.forEach(System.out::println);
         return stringList;
     }
 
+    public static String getMax(List<String> strs){
+
+        double max = 0.0;
+        for (String str : strs) {
+            double tempVal = Double.parseDouble(str);
+            if(tempVal > max) {
+                max = tempVal;
+            }
+        }
+        return String.valueOf(max);
+    }
+
+    public static String getMin(List<String> strs){
+
+        double min = Double.parseDouble(strs.get(0));
+
+        for (int i = 1; i < strs.size(); i++) {
+            double tempVal = Double.parseDouble(strs.get(i));
+            if(min > tempVal){
+                min = tempVal;
+            }
+        }
+
+        return String.valueOf(min);
+    }
 
 
 }
