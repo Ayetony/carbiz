@@ -70,7 +70,7 @@ public class HotProductServiceImpl extends ServiceImpl<HotProductMapper, HotProd
                 String turnover = hotProduct.getMonthlyTurnover();
                 String numOfcomments = hotProduct.getNumberOfComments();
                 String crossBorderWeight = hotProduct.getCrossBorderWeight();
-                turnover = turnover.replace("万｜+", "").replace("+","");
+                turnover = turnover.replace("万", "").replace("+","");
                 turnover = String.valueOf(Integer.parseInt(turnover)*10000);
 
                 numOfcomments = numOfcomments.replace("万", "").replace("+","");
