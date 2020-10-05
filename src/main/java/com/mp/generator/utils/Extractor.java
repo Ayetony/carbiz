@@ -58,7 +58,9 @@ public class Extractor {
     }
 
     public static void main(String[] args) {
-        trimToString("¥2.960 - ¥3.26¥2.95 ¥3.70");
+//        trimToString("¥2.960 - ¥3.26¥2.95 ¥3.70");
+        System.out.println("3000万+");
+
     }
 
     public static List<String> trimToString(String productPrice){
