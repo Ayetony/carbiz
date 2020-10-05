@@ -58,7 +58,8 @@ public class Extractor {
     }
 
     public static void main(String[] args) {
-        trimToString("¥\\n    5.00\\n     - \\n    ¥\\n    21.80");
+        List<String> stringList = trimToString("¥\\n    8.00\\n     - \\n    ¥\\n    41.00");
+        System.out.println(getMax(stringList) + "---" + getMin(stringList));
 //        System.out.println("3000万+");
 
     }
