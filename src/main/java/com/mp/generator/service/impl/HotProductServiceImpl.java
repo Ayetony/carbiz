@@ -72,7 +72,7 @@ public class HotProductServiceImpl extends ServiceImpl<HotProductMapper, HotProd
                 String crossBorderWeight = hotProduct.getCrossBorderWeight();
 
 
-                turnover.replace("+","");
+                turnover = turnover.replace("+","");
                 if(StringUtils.contains(turnover,"万")) {
                     turnover = turnover.replace("万", "");
                     turnover = String.valueOf(Integer.parseInt(turnover) * 10000);
@@ -80,7 +80,7 @@ public class HotProductServiceImpl extends ServiceImpl<HotProductMapper, HotProd
 
 
 
-                numOfcomments.replace("+","");
+                numOfcomments = numOfcomments.replace("+","");
                 if(StringUtils.contains(numOfcomments,"万")) {
                     numOfcomments = numOfcomments.replace("万","");
                     numOfcomments = String.valueOf(Integer.parseInt(numOfcomments) * 10000);
