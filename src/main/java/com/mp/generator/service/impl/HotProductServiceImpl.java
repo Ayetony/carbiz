@@ -70,15 +70,11 @@ public class HotProductServiceImpl extends ServiceImpl<HotProductMapper, HotProd
                 String turnover = hotProduct.getMonthlyTurnover();
                 String numOfcomments = hotProduct.getNumberOfComments();
                 String crossBorderWeight = hotProduct.getCrossBorderWeight();
-                if(turnover.indexOf("万") != -1 ){
-                    turnover = turnover.replace("万｜+", "").replace("+","");
-                    turnover = String.valueOf(Integer.parseInt(turnover)*10000);
-                }
+                turnover = turnover.replace("万｜+", "").replace("+","");
+                turnover = String.valueOf(Integer.parseInt(turnover)*10000);
 
-                if(numOfcomments.indexOf("万") != -1){
-                   numOfcomments = numOfcomments.replace("万", "").replace("+","");
-                   numOfcomments = String.valueOf(Integer.parseInt(numOfcomments)*10000);
-                }
+                numOfcomments = numOfcomments.replace("万", "").replace("+","");
+                numOfcomments = String.valueOf(Integer.parseInt(numOfcomments)*10000);
 
                 hotProduct.setNumberOfComments(numOfcomments);
                 hotProduct.setMonthlyTurnover(turnover);
