@@ -119,6 +119,32 @@ public class ProductInfoController {
         return ResponseEntity.ok().headers(headers).contentLength(file.length()).contentType(MediaType.parseMediaType("application/octet-stream")).body(new FileSystemResource(file));
     }
 
+    @RequestMapping(value="/query_all_id", method= RequestMethod.POST)
+    public String queryAllProductInfoId(@RequestParam("alibaba_product_id") String id){
+        //HttpClientPuller.getJsonByGetRequest(queryId)
+        if(StringUtils.isBlank(id)){
+            return "Error ID";
+        }
+        HttpClientDetailProductPuller puller = new HttpClientDetailProductPuller();
+        Map<AlibabaProductInfoPo,Multimap<String,String>> httpClientMap = puller.productInfoFromJson(id);
+
+        if(httpClientMap == null){
+            return "not exist";
+        }
+
+        Map.Entry<AlibabaProductInfoPo, Multimap<String,String>> map =  httpClientMap.entrySet().iterator().next();
+
+        if(map == null){
+            return "missing request";
+        }
+        Gson gson = new GsonBuilder().enableComplexMapKeySerialization().create();
+        AlibabaProductInfoPo alibabaProductInfoPo = map.getKey();
+        JsonType type = new JsonType();
+        type.setAlibabaProductInfoPo(alibabaProductInfoPo);
+        type.setSkus(map.getValue().asMap());
+        return gson.toJson(type);
+    }
+
     @RequestMapping(value="/query_fully_all", method= RequestMethod.POST)
     public String queryFullyProductInfoId(@RequestParam("alibaba_product_id") String id){
 

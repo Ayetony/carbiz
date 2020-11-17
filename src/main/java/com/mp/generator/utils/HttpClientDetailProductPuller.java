@@ -25,7 +25,7 @@ public class HttpClientDetailProductPuller {
     public static JsonElement getJsonByGetRequest(String id, boolean nocache) {
 
         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-        String oneBoundApi = "https://api-gw.onebound.cn/1688/api_call.php?key=tel18606528273&secret=20200417&api_name=item_get&num_iid=";
+        String oneBoundApi = "http://api-4.onebound.cn/1688/item_get/?key=tel18606528273&secret=20200417&api_name=item_get&num_iid=";
 
         HttpPost httpPost ;
         if(nocache){
@@ -69,7 +69,7 @@ public class HttpClientDetailProductPuller {
 
     public static void main(String[] args) {
         //产品详情解析
-        new HttpClientDetailProductPuller().productInfoFromJson("610947572360");//533816674053 614252193570
+        new HttpClientDetailProductPuller().productInfoFromJson("629417127052");//533816674053 614252193570
         System.out.println(trimColons("尺码:36;"));
 
     }
@@ -226,10 +226,6 @@ public class HttpClientDetailProductPuller {
         }
         return hashMap;
 
-    }
-
-    private static void accept(Map.Entry<String, String> entry) {
-        System.out.println(entry.getKey() + " " + entry.getValue());
     }
 
 }
