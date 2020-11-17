@@ -9,7 +9,6 @@ import com.google.gson.GsonBuilder;
 import com.mp.generator.entity.*;
 import com.mp.generator.mapper.*;
 import com.mp.generator.service.impl.HotProductServiceImpl;
-import com.mp.generator.tasks.ProductTask;
 import com.mp.generator.utils.*;
 import org.apache.commons.lang.StringUtils;
 import org.junit.jupiter.api.Test;
@@ -36,8 +35,6 @@ class LearnApplicationTest {
     ProductInfoSyncMapper productInfoSyncMapper;
     @Autowired
     AlibabaProductInfoPoMapper alibabaProductInfoPoMapper;
-    @Autowired
-    ProductTask productTask;
     @Autowired
     private ProductInfoMapper productInfoMapper;
     @Autowired
@@ -269,18 +266,6 @@ class LearnApplicationTest {
             System.out.println("分类：" + parent + "---" + child);
         });
 
-    }
-
-    @Test
-    public void AliProductProduce() throws InterruptedException, ExecutionException {
-        AtomicInteger count = new AtomicInteger();
-        List<ProductInfoSync> productInfoSyncList = productInfoSyncMapper.selectList(new QueryWrapper<ProductInfoSync>().like("keyword", "母婴")
-                .isNotNull(true, "parent").and(Wrapper -> Wrapper.eq("is_skip",0)).orderByDesc());
-        int size = productInfoSyncList.size();
-        Future<Long> future01 = productTask.importProductTask(productTask.segmentList(productInfoSyncList,size*3/4,size),count);
-        while (!future01.isDone()) {
-            future01.get();
-        }
     }
 
     //给产品同步表打标签test

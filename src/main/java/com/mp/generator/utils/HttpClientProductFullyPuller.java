@@ -63,11 +63,11 @@ public class HttpClientProductFullyPuller {
 
     public static void main(String[] args) {
         //产品详情解析
-        String str =  new HttpClientProductFullyPuller().getJsonByGetRequest("533816674053",true);//533816674053 614252193570
+        String str = HttpClientProductFullyPuller.getJsonByGetRequest("610947572360",true);
         System.out.println(str);
     }
 
-    private static String purify(String json){
+    public static String purify(String json){
         if(json == null){
             return null;
         }

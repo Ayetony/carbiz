@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
-// * <p>
+ // * <p>
  *  前端控制器
  * </p>
  *
@@ -47,33 +47,19 @@ public class ProductInfoController {
 
     @RequestMapping(value="/query_id", method= RequestMethod.POST)
     public void queryByProId(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-          String queryId = request.getParameter("query");
-          if(StringUtils.isBlank(queryId)){
-              request.setAttribute("message","id null error");
-              request.getRequestDispatcher(request.getContextPath() + "/" + "index.jsp").forward(request,response);
-              return;
-          }
-          if(queryId.length()>20){
-              request.setAttribute("message","id error long");
-              request.getRequestDispatcher(  request.getContextPath() + "/" + "index.jsp").forward(request,response);
-              return;
-          }
-        //HttpClientPuller.getJsonByGetRequest(queryId)
-        HttpClientProductPuller puller = new HttpClientProductPuller();
-        Map<AlibabaProductInfoPo,Multimap<String,String>>  mapPuller = puller.productInfoFromJson(queryId);
-        if(mapPuller == null){
-            request.setAttribute("message","null resp");
+        String queryId = request.getParameter("query");
+        if(StringUtils.isBlank(queryId)){
+            request.setAttribute("message","id null error");
             request.getRequestDispatcher(request.getContextPath() + "/" + "index.jsp").forward(request,response);
+            return;
         }
-        Map.Entry<AlibabaProductInfoPo, Multimap<String,String>> map =  mapPuller.entrySet().iterator().next();
-
-        Gson gson = new GsonBuilder().enableComplexMapKeySerialization().create();
-        AlibabaProductInfoPo alibabaProductInfoPo = map.getKey();
-        JsonType type = new JsonType();
-        type.setAlibabaProductInfoPo(alibabaProductInfoPo);
-        type.setSkus(map.getValue().asMap());
-
-        request.setAttribute("message",gson.toJson(type));
+        if(queryId.length()>20){
+            request.setAttribute("message","id error long");
+            request.getRequestDispatcher(  request.getContextPath() + "/" + "index.jsp").forward(request,response);
+            return;
+        }
+        String messageJson = HttpClientProductFullyPuller.getJsonByGetRequest(queryId,true);
+        request.setAttribute("message",messageJson);
         request.getRequestDispatcher(request.getContextPath() + "/" + "index.jsp").forward(request,response);
     }
 
@@ -133,34 +119,8 @@ public class ProductInfoController {
         return ResponseEntity.ok().headers(headers).contentLength(file.length()).contentType(MediaType.parseMediaType("application/octet-stream")).body(new FileSystemResource(file));
     }
 
-    @RequestMapping(value="/query_all_id", method= RequestMethod.POST)
-    public String queryAllProductInfoId(@RequestParam("alibaba_product_id") String id){
-        //HttpClientPuller.getJsonByGetRequest(queryId)
-        if(StringUtils.isBlank(id)){
-            return "Error ID";
-        }
-        HttpClientDetailProductPuller puller = new HttpClientDetailProductPuller();
-        Map<AlibabaProductInfoPo,Multimap<String,String>> httpClientMap = puller.productInfoFromJson(id);
-
-        if(httpClientMap == null){
-            return "not exist";
-        }
-
-        Map.Entry<AlibabaProductInfoPo, Multimap<String,String>> map =  httpClientMap.entrySet().iterator().next();
-
-        if(map == null){
-            return "missing request";
-        }
-        Gson gson = new GsonBuilder().enableComplexMapKeySerialization().create();
-        AlibabaProductInfoPo alibabaProductInfoPo = map.getKey();
-        JsonType type = new JsonType();
-        type.setAlibabaProductInfoPo(alibabaProductInfoPo);
-        type.setSkus(map.getValue().asMap());
-        return gson.toJson(type);
-    }
-
     @RequestMapping(value="/query_fully_all", method= RequestMethod.POST)
-    public String queryFullyProductInfoId(@RequestParam("product_id") String id){
+    public String queryFullyProductInfoId(@RequestParam("alibaba_product_id") String id){
 
         if(StringUtils.isBlank(id)){
             return "Error ID";
@@ -178,7 +138,7 @@ public class ProductInfoController {
 
     @RequestMapping(value="/shopee_pro", method= RequestMethod.POST)
     public String  queryShopeeProduct(@RequestParam("shopee_id") String shopeeID){
-       return HttpClientShopeeProPuller.getJsonByGetRequest(shopeeID).toString();
+        return HttpClientShopeeProPuller.getJsonByGetRequest(shopeeID).toString();
     }
 
 
