@@ -6,13 +6,14 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mp.generator.entity.AlibabaProductInfoPo;
+import com.mp.generator.httpClientPooling.HttpClientManager;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.ParseException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
@@ -24,21 +25,23 @@ public class HttpClientDetailProductPuller {
 
     public static JsonElement getJsonByGetRequest(String id, boolean nocache) {
 
-        CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+        HttpClient httpClient = HttpClientManager.httpClientInstance();
         String oneBoundApi = "http://api-4.onebound.cn/1688/item_get/?key=tel18606528273&secret=20200417&api_name=item_get&num_iid=";
-
         HttpPost httpPost ;
         if(nocache){
             httpPost = new HttpPost(oneBoundApi + id);//"&cache=no"
         }else {
             httpPost = new HttpPost(oneBoundApi + "&cache=no" + id);
         }
+        RequestConfig config = RequestConfig.custom().setConnectTimeout(10000).setSocketTimeout(10000).build();
         // 响应模型
         CloseableHttpResponse response = null;
         String responseStr = "";
         try {
+            //设置request
+            httpPost.setConfig(config);
             // 由客户端执行(发送请求
-            response = httpClient.execute(httpPost);
+            response = (CloseableHttpResponse) httpClient.execute(httpPost);
             // 从响应模型中获取响应实体
             HttpEntity responseEntity = response.getEntity();
             String status = response.getStatusLine().toString();
@@ -51,18 +54,6 @@ public class HttpClientDetailProductPuller {
             }
         } catch (ParseException | IOException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                // 释放资源
-                if (httpClient != null) {
-                    httpClient.close();
-                }
-                if (response != null) {
-                    response.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
         return purify(responseStr);
     }
