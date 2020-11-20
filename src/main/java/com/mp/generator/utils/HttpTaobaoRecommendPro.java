@@ -19,7 +19,7 @@ public class HttpTaobaoRecommendPro {
     public static JsonElement getJsonByGetRequest(String catName) {
 
         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-        String oneBoundApi = "https://api.onebound.cn/taobao/api_call.php?&api_name=item_recommend&lang=zh-CN&key=tel18606528273&secret=20200417&type=" + catName;
+        String oneBoundApi = "https://api-gw.onebound.cn/taobao/item_recommend/?key=tel18606528273&lang=zh-CN&secret=20200417&type=" + catName;
         HttpPost httpPost = new HttpPost(oneBoundApi);
         // 响应模型
         CloseableHttpResponse response = null;

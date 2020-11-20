@@ -1,5 +1,7 @@
 package com.mp.generator.utils;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.apache.http.HttpEntity;
@@ -18,7 +20,7 @@ public class HttpClientSupplierSearch {
     public String search(String keyword, int page) {
 
         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-        String oneBoundApi = "https://api.onebound.cn/1688/api_call.php?q=" + keyword + "&page=" + page +"&cache=no&api_name=item_search_seller&lang=zh-CN&key=tel18606528273&secret=20200417";
+        String oneBoundApi = "https://api-gw.onebound.cn/1688/item_search_seller/?q=" + keyword + "&page=" + page +"&cache=no&lang=zh-CN&key=tel18606528273&secret=20200417";
         HttpPost httpPost = new HttpPost(oneBoundApi);
         // 响应模型
         CloseableHttpResponse response = null;
@@ -57,8 +59,9 @@ public class HttpClientSupplierSearch {
     }
 
     public static void main(String[] args) {
-//        String str = search("男装",10);
-//        System.out.println(purify(str));
+        HttpClientSupplierSearch searcher = new HttpClientSupplierSearch();
+        String str = searcher.search("男",11);
+        System.out.println(searcher.purify(str));
     }
 
 
@@ -69,10 +72,15 @@ public class HttpClientSupplierSearch {
         }
         JsonParser parser;
         parser = new JsonParser();
-        JsonObject jsonObject = parser.parse(json).getAsJsonObject();
-        if(jsonObject.isJsonObject()){
+        JsonElement jsonElement = parser.parse(json);
+        if (jsonElement instanceof JsonObject) {
+            JsonObject  jsonObject = jsonElement.getAsJsonObject();
             return jsonObject.get("items").getAsJsonObject().get("item").toString();
+        } else if (jsonElement instanceof JsonArray) {
+            JsonArray  jsonArray = jsonElement.getAsJsonArray();
+            return jsonArray.toString();
         }
+
         return null;
     }
 }

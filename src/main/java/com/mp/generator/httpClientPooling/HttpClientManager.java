@@ -19,7 +19,7 @@ public class HttpClientManager {
      // Increase default max connection per route to 20
         cm.setDefaultMaxPerRoute(20);
      // Increase max connections for localhost:80 to 50
-        HttpHost host = new HttpHost("http://api-4.onebound.cn", 80);
+        HttpHost host = new HttpHost("https://api-gw.onebound.cn", 80);
         cm.setMaxPerRoute(new HttpRoute(host), 50);
         cm.closeIdleConnections(30, TimeUnit.SECONDS);
         cm.closeExpiredConnections();

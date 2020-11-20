@@ -19,13 +19,13 @@ public class HttpClientProductFullyPuller {
     public static String getJsonByGetRequest(String id, boolean nocache) {
 
         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-        String oneBoundApi = "https://api.onebound.cn/1688/api_call.php?key=tel18606528273&secret=20200417&api_name=item_get&num_iid=";
+        String oneBoundApi = "https://api-gw.onebound.cn/1688/item_get/?key=tel18606528273&secret=20200417&num_iid=";
 
         HttpPost httpPost ;
         if(nocache){
-            httpPost = new HttpPost(oneBoundApi + id);//"&cache=no"
+            httpPost = new HttpPost(oneBoundApi + id + "&cache=no" );//"&cache=no"
         }else {
-            httpPost = new HttpPost(oneBoundApi + "&cache=no" + id);
+            httpPost = new HttpPost(oneBoundApi + id);
         }
         // 响应模型
         CloseableHttpResponse response = null;

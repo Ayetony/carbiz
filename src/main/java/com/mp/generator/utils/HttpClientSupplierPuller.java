@@ -23,19 +23,15 @@ public class HttpClientSupplierPuller {
     public static JsonElement getJson(String shopRef) {
 
         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-        RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(50000).setConnectTimeout(50000).build();
         // shop_ref http://sinoks2008.1688.com/
-        shopRef = StringUtils.substring(shopRef,0,shopRef.length() - 1);
-        System.out.println(shopRef);
-        String oneBoundApi = "https://api.onebound.cn/1688/api_call.php?nick=&api_name=seller_info&lang=zh-CN&key=tel18606528273&secret=20200417&cache=no&shop_url=" + shopRef;
+//        shopRef = StringUtils.substring(shopRef,0,shopRef.length() - 1);
+        String oneBoundApi ="https://api-gw.onebound.cn/1688/seller_info/?key=tel18606528273&nick=&shop_url="+ shopRef + "&cache=no&&lang=zh-CN&secret=20200417";
         HttpPost httpPost ;
         httpPost = new HttpPost(oneBoundApi);
-        httpPost.setConfig(requestConfig);
         CloseableHttpResponse response = null;
         String responseStr = "";
         try {
             // 由客户端执行(发送请求
-            Thread.sleep(500);
             response = httpClient.execute(httpPost);
             // 从响应模型中获取响应实体
             HttpEntity responseEntity = response.getEntity();
@@ -47,7 +43,7 @@ public class HttpClientSupplierPuller {
             if (responseEntity != null) {
                 responseStr = EntityUtils.toString(responseEntity, StandardCharsets.UTF_8);
             }
-        } catch (ParseException | IOException | InterruptedException e) {
+        } catch (ParseException | IOException e) {
             e.printStackTrace();
         } finally {
             try {
@@ -67,15 +63,12 @@ public class HttpClientSupplierPuller {
 
     public static void main(String[] args) {
 
-        System.out.println(supplierPoFromJson("https://000888666.1688.com/"));  //https://0572xcy.1688.com http://sinoks2008.1688.com/
+        System.out.println(getJson("https://yylsmould.1688.com"));  //https://0572xcy.1688.com http://sinoks2008.1688.com/
 
     }
 
     private static JsonElement  purifyUser(String json){
         if(json == null){
-            return null;
-        }
-        if(json.indexOf("error")!=-1){
             return null;
         }
         JsonParser parser;
@@ -86,72 +79,5 @@ public class HttpClientSupplierPuller {
         }
         return null;
     }
-
-
-
-    public static AlibabaSupplierInfoPo supplierPoFromJson(String shopRef){
-
-        AlibabaSupplierInfoPo alibabaSupplierInfoPo = new AlibabaSupplierInfoPo();
-       JsonElement element =  getJson(shopRef);
-       if(element == null){
-           System.out.println("missing content : shop Link" + shopRef);
-           return null;
-       }
-       JsonObject jsonObject = element.getAsJsonObject();
-       String biz_type_model = jsonObject.get("biz_type_model").getAsString();
-       String  creditSellerRank = jsonObject.get("sale_level").getAsString();
-       String shopLocation = jsonObject.get("address").toString();
-       String companyName = jsonObject.get("title").getAsString();
-
-       JsonObject base_info  = jsonObject.get("base_info").getAsJsonObject();
-       JsonObject buyer_service = jsonObject.get("buyer_service").getAsJsonObject();
-       if(StringUtils.equals(jsonObject.get("trade_info").toString(),"[]")){
-           return null;
-       }
-       JsonObject trade_info = jsonObject.get("trade_info").getAsJsonObject();
-
-       //base info
-       if(base_info.get("start_time") == null){
-           return null;
-       }
-       String start_time = base_info.get("start_time").getAsString();
-//       String creditSellerRank = base_info.get("credit_seller_rank").getAsString();
-
-       //buyer service
-        String productDescribeCompareWithAverageRate = buyer_service.get("product_describe_compare_with_average_rate").getAsString();
-        String replyTimeCompareWithAverageRate = buyer_service.get("reply_time_compare_with_average_rate").getAsString();
-        String deliverTimeCompareWithAverageRate = buyer_service.get("delivery_time_compare_with_average_rate").getAsString();
-        String returnRate = buyer_service.get("return_rate").getAsString();
-
-        //trade info
-        String numberCummulativeSale = trade_info.get("number_cummulative_sale").getAsString();
-        String numberOfBuyer = trade_info.get("number_of_buyer").getAsString();
-        String customerRebuyRate = trade_info.get("customer_rebuy_rate").getAsString();
-        String disputeRate = trade_info.get("dispute_rate").getAsString();
-
-
-        alibabaSupplierInfoPo.setBusinessType(biz_type_model);
-        alibabaSupplierInfoPo.setShopRef(shopRef);
-        alibabaSupplierInfoPo.setStartTime(start_time);
-        alibabaSupplierInfoPo.setShopName(companyName);
-        alibabaSupplierInfoPo.setShopLocation(shopLocation);
-        alibabaSupplierInfoPo.setCreditSellerRank(creditSellerRank);
-        alibabaSupplierInfoPo.setCustomerRebuyRate(customerRebuyRate);
-        alibabaSupplierInfoPo.setDeliverTimeCompareWithAverageRate(deliverTimeCompareWithAverageRate);
-        alibabaSupplierInfoPo.setDisputeRate(disputeRate);
-        alibabaSupplierInfoPo.setNumberCummulativeSale(numberCummulativeSale);
-        alibabaSupplierInfoPo.setNumberOfBuyer(numberOfBuyer);
-        alibabaSupplierInfoPo.setReplyTimeCompareWithAverageRate(replyTimeCompareWithAverageRate);
-        alibabaSupplierInfoPo.setReturnRate(returnRate);
-        alibabaSupplierInfoPo.setProductDescribeCompareWithAverageRate(productDescribeCompareWithAverageRate);
-        alibabaSupplierInfoPo.setCrawlTime(LocalDateTime.now().toString());
-
-        return alibabaSupplierInfoPo;
-
-    }
-
-
-
-
 
 }
