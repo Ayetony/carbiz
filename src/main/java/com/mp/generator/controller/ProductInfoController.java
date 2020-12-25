@@ -16,10 +16,7 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -165,6 +162,15 @@ public class ProductInfoController {
     @RequestMapping(value="/shopee_pro", method= RequestMethod.POST)
     public String  queryShopeeProduct(@RequestParam("shopee_id") String shopeeID){
         return HttpClientShopeeProPuller.getJsonByGetRequest(shopeeID).toString();
+    }
+
+    @PostMapping("/order_looking")
+    public String orderInfoLooking(@RequestParam("sku_img_link") String skuIMGLink,@RequestParam("1688_product_id") String id){
+
+        HttpClientProductFullyPuller.getJsonByGetRequest(id,true);
+
+        return null;
+
     }
 
 
