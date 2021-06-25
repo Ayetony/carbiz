@@ -168,7 +168,6 @@ public class ProductInfoController {
     public String orderInfoLooking(@RequestParam("sku_img_link") String skuIMGLink,@RequestParam("1688_product_id") String id){
 
         HttpClientProductFullyPuller.getJsonByGetRequest(id,true);
-
         return null;
 
     }

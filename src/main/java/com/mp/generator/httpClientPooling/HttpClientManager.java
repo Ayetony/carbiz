@@ -1,7 +1,6 @@
 package com.mp.generator.httpClientPooling;
 
 import org.apache.http.HttpHost;
-import org.apache.http.client.config.RequestConfig;
 import org.apache.http.conn.routing.HttpRoute;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -23,10 +22,9 @@ public class HttpClientManager {
         cm.setMaxPerRoute(new HttpRoute(host), 50);
         cm.closeIdleConnections(30, TimeUnit.SECONDS);
         cm.closeExpiredConnections();
-        CloseableHttpClient httpClient = HttpClients.custom()
+        return HttpClients.custom()
                 .setConnectionManager(cm)
                 .build();
-        return  httpClient;
     }
 
 }

@@ -35,7 +35,7 @@ public class HttpClientDetailProductPuller {
         }
         RequestConfig config = RequestConfig.custom().setConnectTimeout(10000).setSocketTimeout(10000).build();
         // 响应模型
-        CloseableHttpResponse response = null;
+        CloseableHttpResponse response;
         String responseStr = "";
         try {
             //设置request
